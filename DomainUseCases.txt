@@ -1,0 +1,61 @@
+# HelpDeskMaster
+
+Roles:
+1. Simple User (SU)
+2. Help desk member (HDM)
+3. Admin (ADM)
+
+UseCases:
+
+1. User
+
+1.1) Assign equipment to user: ADM, HDM +
+1.2) Unassign equipment from user: ADM, HDM +
+
+2. Equipment
+
+2.1) Create equipment: ADM +
+2.2) Delete equipment: ADM +
+2.3) Assign equipment to computer: ADM, HDM +
+2.4) Unassign equipment from computer: ADM, HDM +
+
+3. Equipment type
+
+3.1) Create equipment type: ADM +
+3.2) Delete equipment type: ADM +
+
+4. WorkRequest
+
+4.1) Create work request: any +
+4.2) Add equipment to request: only user that created request and only own equipments +
+4.3) Remove equipment from request: only user that created request and only own equipments +
+4.4) Add post to request: any
+4.5) Remove post from request: only user that created post
+4.6) Assign executer to request: ADM, HDM +
+4.6) Unassign executer from request: ADM, HDM +
+4.7) Change request stage: SU, HDM, ADM +
+4.8) Rate work request execution: only user that created request
+
+5. WorkRequestStageChange
+
+5.1) Move stage next +
+5.2) Move stage back +
+
+6. WorkCategory
+
+6.1) Create work category: ADM
+6.2) Delete work category: ADM
+
+7. WorkDirection
+
+7.1) Create work direction: ADM
+7.2) Delete work direction: ADM
+
+8. Department
+
+8.1) Create department: ADM
+8.2) Delete department: ADM
+8.3) Assign parent department: ADM
+8.4) Unassign parent department: ADM
+8.5) Assign equipment to department: ADM
+8.6) Unassign equipment to department: ADM
