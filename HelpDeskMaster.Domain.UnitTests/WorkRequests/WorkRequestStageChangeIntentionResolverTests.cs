@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using HelpDeskMaster.Domain.Authentication;
 using HelpDeskMaster.Domain.Entities.WorkRequests;
-using HelpDeskMaster.Domain.Entities.WorkRequests.Intentions;
+using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges.Intentions;
 using Moq;
 
 namespace HelpDeskMaster.Domain.UnitTests.WorkRequests

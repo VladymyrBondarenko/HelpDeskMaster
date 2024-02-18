@@ -1,0 +1,67 @@
+﻿using HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.CreateWorkDirection;
+using HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.GetAllWorkDirections;
+using HelpDeskMaster.WebApi.Contracts;
+using HelpDeskMaster.WebApi.Contracts.WorkRequest.Requests;
+using HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace HelpDeskMaster.WebApi.Controllers
+{
+    [ApiController]
+    [Route("api/WorkDirections")]
+    public class WorkDirectionController : ControllerBase
+    {
+        private readonly ISender _sender;
+
+        public WorkDirectionController(ISender sender)
+        {
+            _sender = sender;
+        }
+
+        [HttpPost()]
+        [ProducesResponseType(201, Type = typeof(CreateWorkDirectionResponse))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Create([FromBody] CreateWorkDirectionRequest createWorkDirectionRequest,
+            CancellationToken cancellationToken)
+        {
+            var cmd = new CreateWorkDirectionCommand { Title = createWorkDirectionRequest.Title };
+
+            var workDirectionid = await _sender.Send(cmd, cancellationToken);
+
+            var response = new CreateWorkDirectionResponse
+            {
+                WorkDirectionId = workDirectionid
+            };
+
+            return CreatedAtAction(nameof(Create), new ResponseBody<CreateWorkDirectionResponse>(response));
+        }
+
+        [HttpGet()]
+        [ProducesResponseType(200, Type = typeof(GetAllWorkDirectionsResponse))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var query = new GetAllWorkDirectionsQuery();
+
+            var workDirections = await _sender.Send(query, cancellationToken);
+
+            var response = new GetAllWorkDirectionsResponse 
+            { 
+                WorkDirections = workDirections.Select(x => new WorkDirectionModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt
+                }).ToList()
+            };
+
+            return Ok(new ResponseBody<GetAllWorkDirectionsResponse>(response));
+        }
+    }
+}

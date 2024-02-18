@@ -1,11 +1,11 @@
 ﻿using Ardalis.GuardClauses;
 using HelpDeskMaster.Domain.Abstractions;
 
-namespace HelpDeskMaster.Domain.Entities.WorkRequests
+namespace HelpDeskMaster.Domain.Entities.WorkDirections
 {
     public class WorkDirection : Entity
     {
-        public WorkDirection(Guid id, DateTimeOffset createdAt,
+        internal WorkDirection(Guid id, DateTimeOffset createdAt,
             string title) : base(id, createdAt)
         {
             Title = Guard.Against.NullOrWhiteSpace(title);

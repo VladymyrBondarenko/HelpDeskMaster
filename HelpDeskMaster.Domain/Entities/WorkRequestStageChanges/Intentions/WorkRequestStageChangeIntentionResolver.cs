@@ -1,7 +1,8 @@
 ﻿using HelpDeskMaster.Domain.Authentication;
 using HelpDeskMaster.Domain.Authorization;
+using HelpDeskMaster.Domain.Entities.WorkRequests;
 
-namespace HelpDeskMaster.Domain.Entities.WorkRequests.Intentions
+namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges.Intentions
 {
     internal class WorkRequestStageChangeIntentionResolver : IIntentionResolver<WorkRequestStageChangeIntention, WorkRequest>
     {

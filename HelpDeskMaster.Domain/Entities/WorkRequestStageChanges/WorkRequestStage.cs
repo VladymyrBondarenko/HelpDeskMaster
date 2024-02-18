@@ -1,4 +1,4 @@
-﻿namespace HelpDeskMaster.Domain.Entities.WorkRequests
+﻿namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
 {
     public enum WorkRequestStage
     {

@@ -3,6 +3,7 @@ using HelpDeskMaster.Domain.Authorization;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.WorkRequests;
 using HelpDeskMaster.Domain.Entities.WorkRequests.Intentions;
+using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges;
 using HelpDeskMaster.Domain.Exceptions.WorkRequestExceptions;
 using Moq;
 

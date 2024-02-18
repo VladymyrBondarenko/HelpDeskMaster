@@ -1,8 +1,9 @@
 ﻿using HelpDeskMaster.Domain.Authorization;
-using HelpDeskMaster.Domain.Entities.WorkRequests.Intentions;
+using HelpDeskMaster.Domain.Entities.WorkRequests;
+using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges.Intentions;
 using HelpDeskMaster.Domain.Exceptions.WorkRequestExceptions;
 
-namespace HelpDeskMaster.Domain.Entities.WorkRequests
+namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
 {
     public class WorkRequestStageChangeService
     {
@@ -60,31 +61,31 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             {
                 {
                     // NewRequest -> Assignment
-                    WorkRequestStage.NewRequest, 
+                    WorkRequestStage.NewRequest,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.Assignment, 
+                        WorkRequestStage.Assignment,
                         WorkRequestStageChangeIntention.FromNewRequestToAssignment)
                 },
                 { 
                     // Assignment -> InWork
-                    WorkRequestStage.Assignment, 
+                    WorkRequestStage.Assignment,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.InWork, 
-                        WorkRequestStageChangeIntention.FromAssignmentToInWork) 
+                        WorkRequestStage.InWork,
+                        WorkRequestStageChangeIntention.FromAssignmentToInWork)
                 },
                 { 
                     // InWork -> Done
-                    WorkRequestStage.InWork, 
+                    WorkRequestStage.InWork,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.Done, 
-                        WorkRequestStageChangeIntention.FromInWorkToDone) 
+                        WorkRequestStage.Done,
+                        WorkRequestStageChangeIntention.FromInWorkToDone)
                 },
                 { 
                     // Done -> Archive
-                    WorkRequestStage.Done, 
+                    WorkRequestStage.Done,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.Archive, 
-                        WorkRequestStageChangeIntention.FromDoneToArhive) 
+                        WorkRequestStage.Archive,
+                        WorkRequestStageChangeIntention.FromDoneToArhive)
                 }
             };
 
@@ -93,17 +94,17 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             {
                 { 
                     // Archive -> InWork
-                    WorkRequestStage.Archive, 
+                    WorkRequestStage.Archive,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.InWork, 
-                        WorkRequestStageChangeIntention.FromArhiveToInWork) 
+                        WorkRequestStage.InWork,
+                        WorkRequestStageChangeIntention.FromArhiveToInWork)
                 },
                 { 
                     // InWork -> Assignment
-                    WorkRequestStage.InWork, 
+                    WorkRequestStage.InWork,
                     new WorkRequestStageChangeInstruction(
-                        WorkRequestStage.Assignment, 
-                        WorkRequestStageChangeIntention.FromInWorkToAssignment) 
+                        WorkRequestStage.Assignment,
+                        WorkRequestStageChangeIntention.FromInWorkToAssignment)
                 },
                 {
                     // Done -> InWork
@@ -116,7 +117,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
 
         private class WorkRequestStageChangeInstruction
         {
-            public WorkRequestStageChangeInstruction(WorkRequestStage stageTo, 
+            public WorkRequestStageChangeInstruction(WorkRequestStage stageTo,
                 WorkRequestStageChangeIntention intention)
             {
                 StageTo = stageTo;

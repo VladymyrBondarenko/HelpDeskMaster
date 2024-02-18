@@ -1,4 +1,4 @@
-﻿namespace HelpDeskMaster.Domain.Entities.WorkRequests.Intentions
+﻿namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges.Intentions
 {
     internal enum WorkRequestStageChangeIntention
     {

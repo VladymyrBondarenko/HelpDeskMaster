@@ -1,4 +1,4 @@
-﻿using HelpDeskMaster.Domain.Entities.WorkRequests;
+﻿using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges;
 
 namespace HelpDeskMaster.Domain.Exceptions.WorkRequestExceptions
 {

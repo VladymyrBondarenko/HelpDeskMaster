@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HelpDeskMaster.Domain\HelpDeskMaster.Domain.csproj" />
+    <ProjectReference Include="..\HelpDeskMaster.Persistence\HelpDeskMaster.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

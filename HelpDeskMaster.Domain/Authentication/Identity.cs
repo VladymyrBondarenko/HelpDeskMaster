@@ -11,17 +11,17 @@
 
         public bool IsAuthenticated()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool IsAdmin()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool IsHelpDeskMember()
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

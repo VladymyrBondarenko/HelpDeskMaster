@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using HelpDeskMaster.Domain.Abstractions;
 
-namespace HelpDeskMaster.Domain.Entities.WorkRequests
+namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
 {
     public class WorkRequestStageChange : Entity
     {
