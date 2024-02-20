@@ -3,7 +3,7 @@
     public class EquipmentAlreadyAssignedToComputerException : DomainException
     {
         public EquipmentAlreadyAssignedToComputerException(Guid equipmentId)
-            : base(DomainErrorCode.BadRequest, $"Equipment with id {equipmentId} was already assigned to a computer")
+            : base(DomainErrorCode.InternalServerError, $"Equipment with id {equipmentId} was already assigned to a computer")
         {
         }
     }

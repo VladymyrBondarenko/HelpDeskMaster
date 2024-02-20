@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.CreateWorkCategory
 {
-    internal class CreateWorkCategoryCommandHandler : IRequestHandler<CreateWorkCategoryCommand, Guid>
+    internal class CreateWorkCategoryCommandHandler : IRequestHandler<CreateWorkCategoryCommand, WorkCategory>
     {
         private readonly IWorkCategoryService _workCategoryService;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,13 +16,13 @@ namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.CreateWorkCateg
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Guid> Handle(CreateWorkCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<WorkCategory> Handle(CreateWorkCategoryCommand request, CancellationToken cancellationToken)
         {
             var workCategory = await _workCategoryService.CreateWorkCategoryAsync(request.Title, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return workCategory.Id;
+            return workCategory;
         }
     }
 }

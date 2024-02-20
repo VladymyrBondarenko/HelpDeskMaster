@@ -36,7 +36,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkCategories
                 throw new WorkCategoryIsUsedException(workCategoryId);
             }
 
-            _workCategoryRepository.Delete(workCategoryId);
+            await _workCategoryRepository.Delete(workCategoryId);
         }
     }
 }

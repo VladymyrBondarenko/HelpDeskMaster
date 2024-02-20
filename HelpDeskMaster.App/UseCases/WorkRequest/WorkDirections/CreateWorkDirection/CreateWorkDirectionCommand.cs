@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using HelpDeskMaster.Domain.Entities.WorkDirections;
+using MediatR;
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.CreateWorkDirection
 {
-    public class CreateWorkDirectionCommand : IRequest<Guid>
+    public record class CreateWorkDirectionCommand(string Title) : IRequest<WorkDirection>
     {
-        public required string Title { get; set; }
     }
 }

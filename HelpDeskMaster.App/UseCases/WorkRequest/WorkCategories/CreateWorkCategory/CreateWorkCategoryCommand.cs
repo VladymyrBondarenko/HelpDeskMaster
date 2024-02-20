@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using HelpDeskMaster.Domain.Entities.WorkCategories;
+using MediatR;
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.CreateWorkCategory
 {
-    public class CreateWorkCategoryCommand : IRequest<Guid>
+    public record class CreateWorkCategoryCommand(string Title) : IRequest<WorkCategory>
     {
-        public required string Title { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.CreateWorkDirection;
+using HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.DeleteWorkDirection;
 using HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.GetAllWorkDirections;
 using HelpDeskMaster.WebApi.Contracts;
 using HelpDeskMaster.WebApi.Contracts.WorkRequest.Requests;
@@ -27,13 +28,15 @@ namespace HelpDeskMaster.WebApi.Controllers
         public async Task<IActionResult> Create([FromBody] CreateWorkDirectionRequest createWorkDirectionRequest,
             CancellationToken cancellationToken)
         {
-            var cmd = new CreateWorkDirectionCommand { Title = createWorkDirectionRequest.Title };
+            var cmd = new CreateWorkDirectionCommand(createWorkDirectionRequest.Title);
 
-            var workDirectionid = await _sender.Send(cmd, cancellationToken);
+            var workDirection = await _sender.Send(cmd, cancellationToken);
 
             var response = new CreateWorkDirectionResponse
             {
-                WorkDirectionId = workDirectionid
+                Id = workDirection.Id,
+                Title = workDirection.Title,
+                CreatedAt = workDirection.CreatedAt
             };
 
             return CreatedAtAction(nameof(Create), new ResponseBody<CreateWorkDirectionResponse>(response));
@@ -62,6 +65,20 @@ namespace HelpDeskMaster.WebApi.Controllers
             };
 
             return Ok(new ResponseBody<GetAllWorkDirectionsResponse>(response));
+        }
+
+        [HttpDelete()]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Delete([FromQuery] Guid workDirectionId, CancellationToken cancellationToken)
+        {
+            var cmd = new DeleteWorkDirectionCommand(workDirectionId);
+
+            await _sender.Send(cmd, cancellationToken);
+
+            return NoContent();
         }
     }
 }

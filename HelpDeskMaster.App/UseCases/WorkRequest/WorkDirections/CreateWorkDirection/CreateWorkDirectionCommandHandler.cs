@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.CreateWorkDirection
 {
-    internal class CreateWorkDirectionCommandHandler : IRequestHandler<CreateWorkDirectionCommand, Guid>
+    internal class CreateWorkDirectionCommandHandler : IRequestHandler<CreateWorkDirectionCommand, WorkDirection>
     {
         private readonly IWorkDirectionService _workDirectionService;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,14 +16,13 @@ namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.CreateWorkDirec
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Guid> Handle(
-            CreateWorkDirectionCommand request, CancellationToken cancellationToken)
+        public async Task<WorkDirection> Handle(CreateWorkDirectionCommand request, CancellationToken cancellationToken)
         {
             var workDirection = await _workDirectionService.CreateWorkDirectionAsync(request.Title, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return workDirection.Id;
+            return workDirection;
         }
     }
 }

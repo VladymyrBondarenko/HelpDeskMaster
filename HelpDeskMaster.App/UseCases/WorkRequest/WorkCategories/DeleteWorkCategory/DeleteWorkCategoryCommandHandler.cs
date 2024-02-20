@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.DeleteWorkCategory
 {
-    internal class DeleteWorkCategoryCommandHandler : IRequestHandler<DeleteWorkCategoryCommand, bool>
+    internal class DeleteWorkCategoryCommandHandler : IRequestHandler<DeleteWorkCategoryCommand>
     {
         private readonly IWorkCategoryService _workCategoryService;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,13 +16,11 @@ namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.DeleteWorkCateg
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(DeleteWorkCategoryCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteWorkCategoryCommand request, CancellationToken cancellationToken)
         {
             await _workCategoryService.DeleteWorkCategoryAsync(request.WorkCategoryId, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return true;
         }
     }
 }

@@ -11,9 +11,14 @@ namespace HelpDeskMaster.Persistence.Data.Repositories.WorkRequest
             _dbContext = dbContext;
         }
 
-        public void Delete(Guid workDirectionId)
+        public async Task Delete(Guid workDirectionId)
         {
-            _dbContext.Remove(workDirectionId);
+            var workDirection = await _dbContext.WorkDirections.FindAsync(workDirectionId);
+
+            if(workDirection != null)
+            {
+                _dbContext.Remove(workDirection);
+            }
         }
 
         public async Task InsertAsync(WorkDirection workDirection, CancellationToken cancellationToken)
@@ -24,7 +29,7 @@ namespace HelpDeskMaster.Persistence.Data.Repositories.WorkRequest
         public Task<bool> IsWorkDirectionUsed(Guid workDirectionId, CancellationToken cancellationToken)
         {
             // TODO: add select from work requests by workDirectionId
-            return Task.FromResult(true);
+            return Task.FromResult(false);
         }
     }
 }

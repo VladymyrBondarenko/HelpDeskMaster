@@ -37,7 +37,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkDirections
                 throw new WorkDirectionIsUsedException(workDirectionId);
             }
 
-            _workDirectionRepository.Delete(workDirectionId);
+            await _workDirectionRepository.Delete(workDirectionId);
         }
     }
 }

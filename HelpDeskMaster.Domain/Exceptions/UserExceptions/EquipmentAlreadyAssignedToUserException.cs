@@ -3,7 +3,7 @@
     public class EquipmentAlreadyAssignedToUserException : DomainException
     {
         public EquipmentAlreadyAssignedToUserException(Guid equipmentId)
-            : base(DomainErrorCode.BadRequest, $"Equipment with id {equipmentId} was already assigned to a user")
+            : base(DomainErrorCode.InternalServerError, $"Equipment with id {equipmentId} was already assigned to a user")
         {
         }
     }

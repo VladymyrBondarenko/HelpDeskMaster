@@ -3,7 +3,7 @@
     public class AssignToComputerNotEquipmentException : DomainException
     {
         public AssignToComputerNotEquipmentException(Guid equipmentId)
-            : base(DomainErrorCode.BadRequest, $"Equipment with id {equipmentId} is not a equipment type")
+            : base(DomainErrorCode.InternalServerError, $"Equipment with id {equipmentId} is not a equipment type")
         {
         }
     }

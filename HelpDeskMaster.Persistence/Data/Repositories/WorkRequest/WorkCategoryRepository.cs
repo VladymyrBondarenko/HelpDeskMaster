@@ -16,15 +16,20 @@ namespace HelpDeskMaster.Persistence.Data.Repositories.WorkRequest
             await _dbContext.AddAsync(workCategory, cancellationToken);
         }
 
-        public void Delete(Guid workCategoryId)
+        public async Task Delete(Guid workCategoryId)
         {
-            _dbContext.Remove(workCategoryId);
+            var workCategory = await _dbContext.WorkCategories.FindAsync(workCategoryId);
+
+            if(workCategory != null)
+            {
+                _dbContext.Remove(workCategory);
+            }
         }
 
         public Task<bool> IsWorkCategoryUsedAsync(Guid workCategoryId, CancellationToken cancellationToken)
         {
             // TODO: add select from work requests by workCategoryId
-            return Task.FromResult(true);
+            return Task.FromResult(false);
         }
     }
 }

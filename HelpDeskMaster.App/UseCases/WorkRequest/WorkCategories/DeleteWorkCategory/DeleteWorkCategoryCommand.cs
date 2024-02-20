@@ -2,8 +2,7 @@
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.DeleteWorkCategory
 {
-    public class DeleteWorkCategoryCommand : IRequest<bool>
+    public record class DeleteWorkCategoryCommand(Guid WorkCategoryId) : IRequest
     {
-        public required Guid WorkCategoryId { get; set; }
     }
 }

@@ -4,7 +4,7 @@
     {
         Task InsertAsync(WorkDirection workDirection, CancellationToken cancellationToken);
 
-        void Delete(Guid workDirectionId);
+        Task Delete(Guid workDirectionId);
 
         Task<bool> IsWorkDirectionUsed(Guid workDirectionId, CancellationToken cancellationToken);
     }

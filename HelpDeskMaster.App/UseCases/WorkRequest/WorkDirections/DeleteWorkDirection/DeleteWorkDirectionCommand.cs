@@ -2,8 +2,7 @@
 
 namespace HelpDeskMaster.App.UseCases.WorkRequest.WorkDirections.DeleteWorkDirection
 {
-    public class DeleteWorkDirectionCommand : IRequest<bool>
+    public record class DeleteWorkDirectionCommand(Guid WorkDirectionId) : IRequest
     {
-        public required Guid WorkDirectionId { get; set; }
     }
 }
