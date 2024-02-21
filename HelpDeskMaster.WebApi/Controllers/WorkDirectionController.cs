@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HelpDeskMaster.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/WorkDirections")]
+    [Route("api/workDirections")]
     public class WorkDirectionController : ControllerBase
     {
         private readonly ISender _sender;
@@ -53,8 +53,8 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var workDirections = await _sender.Send(query, cancellationToken);
 
-            var response = new GetAllWorkDirectionsResponse 
-            { 
+            var response = new GetAllWorkDirectionsResponse
+            {
                 WorkDirections = workDirections.Select(x => new WorkDirectionModel
                 {
                     Id = x.Id,
@@ -67,12 +67,12 @@ namespace HelpDeskMaster.WebApi.Controllers
             return Ok(new ResponseBody<GetAllWorkDirectionsResponse>(response));
         }
 
-        [HttpDelete()]
+        [HttpDelete("{workDirectionId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Delete([FromQuery] Guid workDirectionId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid workDirectionId, CancellationToken cancellationToken)
         {
             var cmd = new DeleteWorkDirectionCommand(workDirectionId);
 

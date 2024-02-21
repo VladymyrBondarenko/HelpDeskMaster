@@ -10,7 +10,7 @@ using HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.DeleteWorkCategory;
 namespace HelpDeskMaster.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/WorkCategories")]
+    [Route("api/workCategories")]
     public class WorkCategoryController : ControllerBase
     {
         private readonly ISender _sender;
@@ -67,12 +67,12 @@ namespace HelpDeskMaster.WebApi.Controllers
             return Ok(new ResponseBody<GetAllWorkCategoriesResponse>(response));
         }
 
-        [HttpDelete()]
+        [HttpDelete("{workCategoryId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Delete([FromQuery] Guid workCategoryId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid workCategoryId, CancellationToken cancellationToken)
         {
             var cmd = new DeleteWorkCategoryCommand(workCategoryId);
 

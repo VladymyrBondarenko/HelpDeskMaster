@@ -5,10 +5,11 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{F9D94043-EE92-45CD-956B-9682A094C68F}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		db-view.vsdx = db-view.vsdx
 		Directory.Build.props = Directory.Build.props
-		DomainUseCases.txt = DomainUseCases.txt
 		docker-compose.yaml = docker-compose.yaml
+		DomainUseCases.txt = DomainUseCases.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.Domain", "HelpDeskMaster.Domain\HelpDeskMaster.Domain.csproj", "{F9DF3B78-6185-4AC1-8321-80005731A5C0}"
@@ -19,15 +20,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A842F11E-1C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D7D492F8-0731-420F-9AAF-65568F49E007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.App", "HelpDeskMaster.App\HelpDeskMaster.App.csproj", "{19BF635C-6B71-46A3-B0D6-5F1409E08F33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.App", "HelpDeskMaster.App\HelpDeskMaster.App.csproj", "{19BF635C-6B71-46A3-B0D6-5F1409E08F33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.Persistence", "HelpDeskMaster.Persistence\HelpDeskMaster.Persistence.csproj", "{D77A6A29-B19D-496E-ADAB-96CE443383B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.Persistence", "HelpDeskMaster.Persistence\HelpDeskMaster.Persistence.csproj", "{D77A6A29-B19D-496E-ADAB-96CE443383B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.Domain.DependencyInjection", "HelpDeskMaster.Domain.DependencyInjection\HelpDeskMaster.Domain.DependencyInjection.csproj", "{48EAAE29-1DD7-4563-AC12-7F38280EA39D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.Domain.DependencyInjection", "HelpDeskMaster.Domain.DependencyInjection\HelpDeskMaster.Domain.DependencyInjection.csproj", "{48EAAE29-1DD7-4563-AC12-7F38280EA39D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.Persistence.DependencyInjection", "HelpDeskMaster.Persistence.DependencyInjection\HelpDeskMaster.Persistence.DependencyInjection.csproj", "{0C5D1AF4-C2A4-4859-8EDE-3DFFA6FE8656}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.Persistence.DependencyInjection", "HelpDeskMaster.Persistence.DependencyInjection\HelpDeskMaster.Persistence.DependencyInjection.csproj", "{0C5D1AF4-C2A4-4859-8EDE-3DFFA6FE8656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.WebApi", "HelpDeskMaster.WebApi\HelpDeskMaster.WebApi.csproj", "{42466840-807E-4527-9654-782D7F6A0531}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskMaster.WebApi", "HelpDeskMaster.WebApi\HelpDeskMaster.WebApi.csproj", "{42466840-807E-4527-9654-782D7F6A0531}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskMaster.E2ETests", "HelpDeskMaster.E2ETests\HelpDeskMaster.E2ETests.csproj", "{3C1F416C-6694-433B-A49A-1537465FE166}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +66,10 @@ Global
 		{42466840-807E-4527-9654-782D7F6A0531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42466840-807E-4527-9654-782D7F6A0531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42466840-807E-4527-9654-782D7F6A0531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C1F416C-6694-433B-A49A-1537465FE166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C1F416C-6694-433B-A49A-1537465FE166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C1F416C-6694-433B-A49A-1537465FE166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C1F416C-6694-433B-A49A-1537465FE166}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +82,7 @@ Global
 		{48EAAE29-1DD7-4563-AC12-7F38280EA39D} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
 		{0C5D1AF4-C2A4-4859-8EDE-3DFFA6FE8656} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
 		{42466840-807E-4527-9654-782D7F6A0531} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
+		{3C1F416C-6694-433B-A49A-1537465FE166} = {D7D492F8-0731-420F-9AAF-65568F49E007}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C5DF49B-4A89-4D87-9FBE-CECCE621E0A7}
