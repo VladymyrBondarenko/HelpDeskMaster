@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using HelpDeskMaster.App.Behaviours;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HelpDeskMaster.App.DependencyInjection
 {
@@ -11,7 +8,14 @@ namespace HelpDeskMaster.App.DependencyInjection
     {
         public static IServiceCollection AddHelpDeskMasterApp(this IServiceCollection services)
         {
-            services.AddScoped<>();
+            var targetAssembly = typeof(HelpDeskMasterAppRoot).Assembly;
+
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(targetAssembly);
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+            services.AddValidatorsFromAssembly(targetAssembly, includeInternalTypes: true);
 
             return services;
         }

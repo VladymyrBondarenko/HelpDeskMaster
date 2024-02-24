@@ -10,8 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.9.0" />
-    <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HelpDeskMaster.App\HelpDeskMaster.App.csproj" />
+    <ProjectReference Include="..\HelpDeskMaster.App.DependencyInjection\HelpDeskMaster.App.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Domain.DependencyInjection\HelpDeskMaster.Domain.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Persistence.DependencyInjection\HelpDeskMaster.Persistence.DependencyInjection.csproj" />
   </ItemGroup>

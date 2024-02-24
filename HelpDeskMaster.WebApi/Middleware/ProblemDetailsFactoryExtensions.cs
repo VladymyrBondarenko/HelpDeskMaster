@@ -22,6 +22,8 @@ namespace HelpDeskMaster.WebApi.Middleware
             var statusCode = domainException.ErrorCode switch
             {
                 DomainErrorCode.Gone => StatusCodes.Status410Gone,
+                DomainErrorCode.InternalServerError => StatusCodes.Status500InternalServerError,
+                DomainErrorCode.BadRequest => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 

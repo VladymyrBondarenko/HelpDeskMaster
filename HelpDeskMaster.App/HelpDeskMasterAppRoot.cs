@@ -1,6 +1,6 @@
 ﻿namespace HelpDeskMaster.App
 {
-    public static class DependencyInjection
+    public static class HelpDeskMasterAppRoot
     {
     }
 }

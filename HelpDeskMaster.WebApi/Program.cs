@@ -1,5 +1,6 @@
 using HelpDeskMaster.Domain.DependencyInjection;
 using HelpDeskMaster.Persistence.DependencyInjection;
+using HelpDeskMaster.App.DependencyInjection;
 using HelpDeskMaster.WebApi.Helpers;
 using HelpDeskMaster.WebApi.Middleware;
 
@@ -10,11 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(
-    typeof(HelpDeskMaster.App.DependencyInjection).Assembly));
-
 builder.Services
     .AddHelpDeskMasterDomain()
+    .AddHelpDeskMasterApp()
     .AddHelpDeskMasterPersistence(builder.Configuration.GetConnectionString("ApplicationDbConnection")!);
 
 var app = builder.Build();
