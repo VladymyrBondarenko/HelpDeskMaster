@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Testcontainers.PostgreSql;
 using Xunit;
 
@@ -18,7 +17,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string?>
                 {
-                    ["ConnectionStrings:ApplicationDbConnection"] = _dbContainer.GetConnectionString()
+                    ["ConnectionStrings:HdmDbConnection"] = _dbContainer.GetConnectionString()
                 }).Build();
             builder.UseConfiguration(configuration);
 

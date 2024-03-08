@@ -18,8 +18,7 @@ namespace HelpDeskMaster.Domain.DependencyInjection
 
             services.AddScoped<IIntentionResolver, ManageWorkCategoryIntentionResolver>()
                 .AddScoped<IIntentionResolver, ManageWorkDirectionIntentionResolver>()
-                .AddScoped<IIntentionManager, IntentionManager>()
-                .AddScoped<IIdentityProvider, IdentityProvider>();
+                .AddScoped<IIntentionManager, IntentionManager>();
 
             return services;
         }

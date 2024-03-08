@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HelpDeskMaster.App.DependencyInjection\HelpDeskMaster.App.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Domain.DependencyInjection\HelpDeskMaster.Domain.DependencyInjection.csproj" />
+    <ProjectReference Include="..\HelpDeskMaster.Infrastracture.DependencyInjection\HelpDeskMaster.Infrastracture.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Persistence.DependencyInjection\HelpDeskMaster.Persistence.DependencyInjection.csproj" />
   </ItemGroup>
 

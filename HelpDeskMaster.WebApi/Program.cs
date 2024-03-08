@@ -3,18 +3,21 @@ using HelpDeskMaster.Persistence.DependencyInjection;
 using HelpDeskMaster.App.DependencyInjection;
 using HelpDeskMaster.WebApi.Helpers;
 using HelpDeskMaster.WebApi.Middleware;
+using HelpDeskMaster.Infrastracture.DependencyInjection;
+using HelpDeskMaster.WebApi.Installers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
 
 builder.Services
     .AddHelpDeskMasterDomain()
     .AddHelpDeskMasterApp()
-    .AddHelpDeskMasterPersistence(builder.Configuration.GetConnectionString("ApplicationDbConnection")!);
+    .AddHelpDeskMasterInfrastracture(builder.Configuration)
+    .AddHelpDeskMasterPersistence(builder.Configuration.GetConnectionString("HdmDbConnection")!);
 
 var app = builder.Build();
 
@@ -29,6 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
