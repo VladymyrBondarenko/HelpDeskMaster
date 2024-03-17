@@ -13,7 +13,7 @@ namespace HelpDeskMaster.Persistence.DependencyInjection
         public static IServiceCollection AddHelpDeskMasterPersistence(this IServiceCollection services,
             string connectionString)
         {
-            services.AddDbContextPool<ApplicationDbContext>(opt =>
+           services.AddDbContextPool<ApplicationDbContext>(opt =>
             {
                 opt.UseNpgsql(connectionString);
             });

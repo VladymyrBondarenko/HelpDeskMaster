@@ -5,12 +5,15 @@ using HelpDeskMaster.WebApi.Contracts;
 using HelpDeskMaster.WebApi.Contracts.WorkRequest.Requests;
 using HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDeskMaster.WebApi.Controllers
 {
     [ApiController]
     [Route("api/workDirections")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WorkDirectionController : ControllerBase
     {
         private readonly ISender _sender;

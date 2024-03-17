@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		.gitignore = .gitignore
 		db-view.vsdx = db-view.vsdx
 		Directory.Build.props = Directory.Build.props
-		docker-compose.yaml = docker-compose.yaml
 		DomainUseCases.txt = DomainUseCases.txt
 	EndProjectSection
 EndProject
@@ -45,6 +44,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastracture", "Infrastracture", "{A306D9EA-71D3-4FE3-B441-3D889A812162}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{0301085F-FA2A-4D59-9998-2386F8FF9C59}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{641D60A0-F24C-417A-B5F8-423606E9DF27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +97,10 @@ Global
 		{19E4E748-27DD-4992-9266-AEB24626B6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19E4E748-27DD-4992-9266-AEB24626B6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19E4E748-27DD-4992-9266-AEB24626B6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{641D60A0-F24C-417A-B5F8-423606E9DF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{641D60A0-F24C-417A-B5F8-423606E9DF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{641D60A0-F24C-417A-B5F8-423606E9DF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{641D60A0-F24C-417A-B5F8-423606E9DF27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +121,7 @@ Global
 		{B7CEBAA5-74EB-4D68-9A6B-5BC84957E860} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
 		{A306D9EA-71D3-4FE3-B441-3D889A812162} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
 		{0301085F-FA2A-4D59-9998-2386F8FF9C59} = {A842F11E-1C17-4F35-8425-26BD1C812EE7}
+		{641D60A0-F24C-417A-B5F8-423606E9DF27} = {F9D94043-EE92-45CD-956B-9682A094C68F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C5DF49B-4A89-4D87-9FBE-CECCE621E0A7}

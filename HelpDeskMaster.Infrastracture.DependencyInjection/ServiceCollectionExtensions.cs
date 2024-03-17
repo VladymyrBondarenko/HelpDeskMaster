@@ -11,7 +11,8 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddHelpDeskMasterInfrastracture(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHelpDeskMasterInfrastracture(this IServiceCollection services,
+            IConfiguration configuration)
         {
             var authenticationOptions = configuration
                 .GetSection(KeycloakAuthenticationOptions.Section)
@@ -34,10 +35,10 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
             var validationParameters = new TokenValidationParameters
             {
                 ClockSkew = keycloakOptions.TokenClockSkew,
-                ValidateAudience = keycloakOptions.VerifyTokenAudience ?? true,
-                ValidateIssuer = true,
+                ValidateAudience = keycloakOptions.VerifyTokenAudience,
+                ValidateIssuer = keycloakOptions.ValidateIssuer,
                 NameClaimType = "preferred_username",
-                RoleClaimType = roleClaimType,
+                RoleClaimType = roleClaimType
             };
 
             return services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

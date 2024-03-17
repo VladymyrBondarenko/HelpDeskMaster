@@ -12,6 +12,7 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
     {
         private string? authServerUrl;
         private bool? verifyTokenAudience;
+        private bool? validateIssuer;
         private TimeSpan? tokenClockSkew;
         private string? sslRequired;
 
@@ -24,12 +25,9 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
         [ConfigurationKeyName("auth-server-url")]
         public string AuthServerUrl
         {
-            get => authServerUrl ?? AuthServerUrl2;
+            get => authServerUrl ?? string.Empty;
             set => authServerUrl = value;
         }
-
-        [ConfigurationKeyName("AuthServerUrl")]
-        private string AuthServerUrl2 { get; set; } = default!;
 
         /// <summary>
         /// Keycloak Realm
@@ -48,13 +46,21 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
         /// Audience verification
         /// </summary>
         [ConfigurationKeyName("verify-token-audience")]
-        public bool? VerifyTokenAudience
+        public bool VerifyTokenAudience
         {
-            get => verifyTokenAudience ?? VerifyTokenAudience2;
+            get => verifyTokenAudience ?? true;
             set => verifyTokenAudience = value;
         }
-        [ConfigurationKeyName("VerifyTokenAudience")]
-        private bool? VerifyTokenAudience2 { get; set; }
+
+        /// <summary>
+        /// Validate issuer
+        /// </summary>
+        [ConfigurationKeyName("verify-token-issuer")]
+        public bool ValidateIssuer 
+        { 
+            get => validateIssuer ?? true; 
+            set => validateIssuer = value; 
+        }
 
         /// <summary>
         /// Credentials, defined for private client
@@ -70,11 +76,9 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
         [ConfigurationKeyName("token-clock-skew")]
         public TimeSpan TokenClockSkew
         {
-            get => tokenClockSkew ?? TokenClockSkew2 ?? TimeSpan.Zero;
+            get => tokenClockSkew ?? TimeSpan.Zero;
             set => tokenClockSkew = value;
         }
-        [ConfigurationKeyName("TokenClockSkew")]
-        private TimeSpan? TokenClockSkew2 { get; set; }
 
         /// <summary>
         /// Require HTTPS
@@ -82,11 +86,9 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
         [ConfigurationKeyName("ssl-required")]
         public string SslRequired
         {
-            get => sslRequired ?? SslRequired2;
+            get => sslRequired ?? "external";
             set => sslRequired = value;
         }
-        [ConfigurationKeyName("SslRequired")]
-        private string SslRequired2 { get; set; } = default!;
 
         /// <summary>
         /// Realm URL
@@ -99,11 +101,5 @@ namespace HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuratio
 
             return urlNormalized;
         }
-
-        /// <summary>
-        /// RolesClaimTransformationSource
-        /// </summary>
-        [ConfigurationKeyName("RolesSource")]
-        public RolesClaimTransformationSource RolesSource { get; set; } = RolesClaimTransformationSource.ResourceAccess;
     }
 }

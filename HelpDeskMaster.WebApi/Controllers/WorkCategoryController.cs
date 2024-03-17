@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.CreateWorkCategory;
 using HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.GetAllWorkCategories;
 using HelpDeskMaster.App.UseCases.WorkRequest.WorkCategories.DeleteWorkCategory;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace HelpDeskMaster.WebApi.Controllers
 {
     [ApiController]
     [Route("api/workCategories")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WorkCategoryController : ControllerBase
     {
         private readonly ISender _sender;
