@@ -1,0 +1,37 @@
+[
+  {
+    "realm": "hdm-realm",
+    "users": [
+      {
+        "id": "3d789ed2-8eba-4d1b-a29d-b973e1d21d1e",
+        "username": "hdm-client-user",
+        "firstName": "user-name",
+        "lastName": "user-surname",
+        "email": "hdm-client-user@mail.com",
+        "enabled": true,
+        "totp": false,
+        "emailVerified": true,
+        "disableableCredentialTypes": [],
+        "requiredActions": [],
+        "credentials": [
+          {
+            "type": "password",
+            "value": "password"
+          }
+        ],
+        "realmRoles": [
+          "default-roles-hdm-realm",
+          "help-desk-member",
+          "help-desk-admin"
+        ],
+        "clientRoles": {
+          "hdm-client": [
+            "uma_protection"
+          ]
+        },
+        "notBefore": 0,
+        "groups": []
+      }
+    ]
+  }
+]

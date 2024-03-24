@@ -31,7 +31,7 @@ services:
     Keycloak__resource: 'hdm-client'
     Keycloak__verify-token-audience: 'False'
     Keycloak__verify-token-issuer: 'False'
-    Keycloak__credentials__secret: '<Set client secret>'
+    Keycloak__credentials__secret: 'WNMzQVpMkjskGVTZCJB4T5SQ6xPQjJzg'
     Keycloak__confidential-port: '0'
    networks:
     - hdm-network
@@ -53,8 +53,7 @@ services:
 
   keycloak:
     container_name: 'keycloak'
-    image: quay.io/keycloak/keycloak:23.0
-    command: start-dev
+    image: quay.io/keycloak/keycloak:24.0
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-postgres
@@ -67,6 +66,16 @@ services:
       KC_HTTP_PORT: 8088
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      [
+        'start-dev',
+        '-Dkeycloak.migration.action=import',
+        '-Dkeycloak.migration.provider=dir',
+        '-Dkeycloak.migration.dir=/opt/keycloak/tmp/import',
+        '-Dkeycloak.migration.strategy=OVERWRITE_EXISTING'
+      ]
+    volumes:
+     - ./HelpDeskMaster.WebApi/Authentication/Keycloak/Import:/opt/keycloak/tmp/import
     ports:
         - 8090:8088
     depends_on:

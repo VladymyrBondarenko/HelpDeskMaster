@@ -1,23 +1,32 @@
-﻿using HelpDeskMaster.Persistence.Data;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Testcontainers.PostgreSql;
 using Xunit;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
     public class HDMServerApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder().Build();
+        private readonly HDMContainersInitializer _containersInitializer = new();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            var keycloakIpAddress = _containersInitializer.KeycloakContainer.IpAddress;
+            var keycloakPort = _containersInitializer.KeycloakContainer.GetMappedPublicPort(
+                HDMContainersInitializer.KeycloakContainerPort);
+
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string?>
                 {
-                    ["ConnectionStrings:HdmDbConnection"] = _dbContainer.GetConnectionString()
+                    ["ConnectionStrings:HdmDbConnection"] = _containersInitializer.HdmPostgresContainer.GetConnectionString(),
+                    ["Keycloak:realm"] = "hdm-realm",
+                    ["Keycloak:resource"] = "hdm-client",
+                    ["Keycloak:credentials:secret"] = "WNMzQVpMkjskGVTZCJB4T5SQ6xPQjJzg",
+                    ["Keycloak:confidential-port"] = "0",
+                    ["Keycloak:auth-server-url"] = $"http://{keycloakIpAddress}:{keycloakPort}/",
+                    ["Keycloak:verify-token-issuer"] = "False",
+                    ["Keycloak:verify-token-audience"] = "False",
+                    ["Keycloak:ssl-required"] = "none"
                 }).Build();
             builder.UseConfiguration(configuration);
 
@@ -26,17 +35,12 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
 
         public async Task InitializeAsync()
         {
-            await _dbContainer.StartAsync();
-            var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            dbContextOptionsBuilder.UseNpgsql(_dbContainer.GetConnectionString());
-
-            var dbContext = new ApplicationDbContext(dbContextOptionsBuilder.Options);
-            await dbContext.Database.MigrateAsync();
+            await _containersInitializer.InitializeAsync();
         }
 
         public new async Task DisposeAsync()
         {
-            await _dbContainer.DisposeAsync();
+            await _containersInitializer.DisposeAsync();
         }
     }
 }
