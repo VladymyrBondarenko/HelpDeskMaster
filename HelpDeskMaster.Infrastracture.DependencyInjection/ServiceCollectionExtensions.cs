@@ -18,6 +18,7 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
                 .GetSection(KeycloakAuthenticationOptions.Section)
                 .Get<KeycloakAuthenticationOptions>()!;
             services.AddKeycloakAuthentication(authenticationOptions);
+            services.AddSingleton(authenticationOptions);
 
             services.AddScoped<IIdentityProvider, IdentityProvider>();
 

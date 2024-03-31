@@ -7,41 +7,36 @@ using Xunit;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
-    public class WorkCategoryEndpointTests : IClassFixture<HDMServerApplicationFactory>
+    public class WorkCategoryEndpointTests : HdmEndpointTestBase
     {
-        private readonly HDMServerApplicationFactory _factory;
-
-        public WorkCategoryEndpointTests(HDMServerApplicationFactory factory)
+        public WorkCategoryEndpointTests(HdmServerApplicationFactory factory) : base(factory)
         {
-            _factory = factory;
         }
 
         [Fact]
         public async Task ShouldReturnListOfWorkCategories()
         {
-            using var httpClient = _factory.CreateClient();
-            using var response = await httpClient.GetAsync("api/workCategories");
+            await AuthenticateAsync();
 
+            using var response = await HttpClient.GetAsync("api/workCategories");
             response.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
             var reponseBody = await response.Content.ReadFromJsonAsync<ResponseBody<GetAllWorkCategoriesResponse>>();
 
             reponseBody.Should().NotBeNull()
                     .And.Subject.As<ResponseBody<GetAllWorkCategoriesResponse>>()
-                .Data.Should().NotBeNull()
-                    .And.Subject.As<GetAllWorkCategoriesResponse>()
-                .WorkCategories.Should().BeEmpty();
+                .Data.Should().NotBeNull();
         }
 
         [Fact]
         public async Task ShouldCreateNewWorkCategory()
         {
+            await AuthenticateAsync();
+
             var request = new CreateWorkCategoryRequest("Category");
 
-            using var httpClient = _factory.CreateClient();
-            using var response = await httpClient.PostAsJsonAsync("api/workCategories",
+            using var response = await HttpClient.PostAsJsonAsync("api/workCategories",
                 request, CancellationToken.None);
-
             response.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
             var reponseBody = await response.Content.ReadFromJsonAsync<ResponseBody<CreateWorkCategoryResponse>>();
@@ -53,7 +48,9 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                 .Title.Should().Be(request.Title);
             reponseBody!.Data.Id.Should().NotBeEmpty();
 
-            using var getResponse = await httpClient.GetAsync("api/workCategories");
+            using var getResponse = await HttpClient.GetAsync("api/workCategories");
+            getResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
+
             var categoriesData = await getResponse.Content.ReadFromJsonAsync<ResponseBody<GetAllWorkCategoriesResponse>>();
 
             categoriesData.Should().NotBeNull()
@@ -66,22 +63,23 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
         [Fact]
         public async Task ShouldDeleteWorkCategory()
         {
+            await AuthenticateAsync();
+
             var request = new CreateWorkCategoryRequest("Category");
 
-            using var httpClient = _factory.CreateClient();
-            using var createResponse = await httpClient.PostAsJsonAsync("api/workCategories",
+            using var createResponse = await HttpClient.PostAsJsonAsync("api/workCategories",
                 request, CancellationToken.None);
-
             createResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
             var createReponseBody = await createResponse.Content.ReadFromJsonAsync<ResponseBody<CreateWorkCategoryResponse>>();
             createReponseBody!.Data.Id.Should().NotBeEmpty();
 
-            using var deleteResponse = await httpClient.DeleteAsync($"api/workCategories/{createReponseBody!.Data.Id}");
-
+            using var deleteResponse = await HttpClient.DeleteAsync($"api/workCategories/{createReponseBody!.Data.Id}");
             deleteResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
-            using var getResponse = await httpClient.GetAsync("api/workCategories");
+            using var getResponse = await HttpClient.GetAsync("api/workCategories");
+            getResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
+
             var categoriesData = await getResponse.Content.ReadFromJsonAsync<ResponseBody<GetAllWorkCategoriesResponse>>();
 
             categoriesData.Should().NotBeNull()

@@ -5,15 +5,14 @@ using Xunit;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
-    public class HDMServerApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+    public class HdmServerApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private readonly HDMContainersInitializer _containersInitializer = new();
+        private readonly HdmContainersInitializer _containersInitializer = new();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            var keycloakIpAddress = _containersInitializer.KeycloakContainer.IpAddress;
-            var keycloakPort = _containersInitializer.KeycloakContainer.GetMappedPublicPort(
-                HDMContainersInitializer.KeycloakContainerPort);
+            var keycloakPublicPort = _containersInitializer.KeycloakContainer.GetMappedPublicPort(
+                HdmContainersInitializer.KeycloakContainerPort);
 
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string?>
@@ -23,7 +22,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                     ["Keycloak:resource"] = "hdm-client",
                     ["Keycloak:credentials:secret"] = "WNMzQVpMkjskGVTZCJB4T5SQ6xPQjJzg",
                     ["Keycloak:confidential-port"] = "0",
-                    ["Keycloak:auth-server-url"] = $"http://{keycloakIpAddress}:{keycloakPort}/",
+                    ["Keycloak:auth-server-url"] = $"http://localhost:{keycloakPublicPort}/",
                     ["Keycloak:verify-token-issuer"] = "False",
                     ["Keycloak:verify-token-audience"] = "False",
                     ["Keycloak:ssl-required"] = "none"

@@ -6,7 +6,7 @@ using Testcontainers.PostgreSql;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
-    internal class HDMContainersInitializer
+    internal class HdmContainersInitializer
     {
         private PostgreSqlContainer _keycloakPostgresContainer;
         public PostgreSqlContainer KeycloakPostgresContainer => _keycloakPostgresContainer;
@@ -21,7 +21,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
         private PostgreSqlContainer _hdmPostgresContainer;
         public PostgreSqlContainer HdmPostgresContainer => _hdmPostgresContainer;
 
-        public HDMContainersInitializer()
+        public HdmContainersInitializer()
         {
             var network = new NetworkBuilder()
                 .WithName(Guid.NewGuid().ToString())
@@ -56,7 +56,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                 .WithEnvironment("KC_DB_PASSWORD", "admin")
                 .WithEnvironment("KC_DB_SCHEMA", "public")
                 .WithResourceMapping(
-                    "Authentication/Keycloak/Import",
+                    "Authentication/Keycloak/ImportForTests/UserFullAccess",
                     "/opt/keycloak/tmp/import")
                 .WithCommand("-Dkeycloak.migration.action=import")
                 .WithCommand("-Dkeycloak.migration.provider=dir")
