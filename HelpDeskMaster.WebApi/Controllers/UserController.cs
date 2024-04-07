@@ -31,11 +31,6 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var user = await _sender.Send(query, cancellationToken);
 
-            if(user == null)
-            {
-                return NotFound();
-            }
-
             var response = new GetUserByLoginResponse 
             { 
                 Id = user.Id,
