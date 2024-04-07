@@ -14,7 +14,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
             _intentionManager = intentionManager;
         }
 
-        public WorkRequestStageChange MoveRequestStageNext(WorkRequest workRequest)
+        public async Task<WorkRequestStageChange> MoveRequestStageNextAsync(WorkRequest workRequest, 
+            CancellationToken cancellationToken)
         {
             if (workRequest.RequestStageChanges.Count == 0)
             {
@@ -29,13 +30,14 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
                 throw new WorkRequestNextStageResolvingException(workRequest.Id);
             }
 
-            _intentionManager.ThrowIfForbidden(
-                instruction.Intention, workRequest);
+            await _intentionManager.ThrowIfForbiddenAsync(instruction.Intention, workRequest, 
+                cancellationToken);
 
             return workRequest.ChangeRequestStage(instruction.StageTo);
         }
 
-        public WorkRequestStageChange MoveRequestStageBack(WorkRequest workRequest)
+        public async Task<WorkRequestStageChange> MoveRequestStageBackAsync(WorkRequest workRequest, 
+            CancellationToken cancellationToken)
         {
             if (workRequest.RequestStageChanges.Count == 0)
             {
@@ -50,8 +52,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequestStageChanges
                 throw new WorkRequestPreviousStageResolvingException(workRequest.Id);
             }
 
-            _intentionManager.ThrowIfForbidden(
-                instruction.Intention, workRequest);
+            await _intentionManager.ThrowIfForbiddenAsync(instruction.Intention, workRequest, 
+                cancellationToken);
 
             return workRequest.ChangeRequestStage(instruction.StageTo);
         }

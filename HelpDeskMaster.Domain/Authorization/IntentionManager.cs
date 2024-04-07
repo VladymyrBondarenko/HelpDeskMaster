@@ -14,16 +14,22 @@ namespace HelpDeskMaster.Domain.Authorization
             _identityProvider = identityProvider;
         }
 
-        public bool IsAllowed<TIntention>(TIntention intention) where TIntention : struct
+        public async Task<bool> IsAllowedAsync<TIntention>(TIntention intention, 
+            CancellationToken cancellationToken) where TIntention : struct
         {
+            var currentIdentity = await _identityProvider.GetIdentityAsync(cancellationToken);
+
             var matchingResolver = _resolvers.OfType<IIntentionResolver<TIntention>>().FirstOrDefault();
-            return matchingResolver?.Resolve(_identityProvider.Current, intention) ?? false;
+            return matchingResolver?.Resolve(currentIdentity, intention) ?? false;
         }
 
-        public bool IsAllowed<TIntention, TObject>(TIntention intention, TObject intentionObject) where TIntention : struct
+        public async Task<bool> IsAllowedAsync<TIntention, TObject>(TIntention intention, TObject intentionObject, 
+            CancellationToken cancellationToken) where TIntention : struct
         {
+            var currentIdentity = await _identityProvider.GetIdentityAsync(cancellationToken);
+
             var matchingResolver = _resolvers.OfType<IIntentionResolver<TIntention, TObject>>().FirstOrDefault();
-            return matchingResolver?.Resolve(_identityProvider.Current, intentionObject, intention) ?? false;
+            return matchingResolver?.Resolve(currentIdentity, intentionObject, intention) ?? false;
         }
     }
 }

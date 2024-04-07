@@ -19,7 +19,8 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
         public async Task AssignEquipmentToComputerAsync(Equipment computer,
             Guid equipmentId, DateTimeOffset assignDate, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageComputerEquipmentIntention.Assign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Assign, 
+                cancellationToken);
 
             if (computer.Id == equipmentId)
             {
@@ -46,10 +47,11 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             _computerEquipmentRepository.Insert(computerEquipment);
         }
 
-        public void UnassignEquipmentFromComputer(Equipment computer, Guid equipmentId,
-            DateTimeOffset unassignDate)
+        public async Task UnassignEquipmentFromComputerAsync(Equipment computer, Guid equipmentId,
+            DateTimeOffset unassignDate, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageComputerEquipmentIntention.Unassign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Unassign, 
+                cancellationToken);
 
             var computerEquipment = computer.ComputerEquipments.SingleOrDefault(x =>
                 x.EquipmentId == equipmentId

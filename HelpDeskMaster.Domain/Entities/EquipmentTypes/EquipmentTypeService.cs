@@ -15,9 +15,11 @@ namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
             _equipmentTypeRepository = equipmentTypeRepository;
         }
 
-        public EquipmentType CreateEquipmentType(string title, TypeOfEquipment typeOfEquipment)
+        public async Task<EquipmentType> CreateEquipmentTypeAsync(string title, TypeOfEquipment typeOfEquipment,
+            CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentTypeIntention.Create);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Create, 
+                cancellationToken);
 
             var equipmentType = new EquipmentType(Guid.NewGuid(), 
                 title, 
@@ -31,14 +33,16 @@ namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
 
         public async Task<bool> UpdateEquipmentTypeAsync(EquipmentType equipmentType, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentTypeIntention.Update);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Update, 
+                cancellationToken);
 
             return await _equipmentTypeRepository.UpdateAsync(equipmentType, cancellationToken);
         }
 
         public async Task<bool> DeleteEquipmentTypeAsync(Guid equipmentTypeId, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentTypeIntention.Delete);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Delete, 
+                cancellationToken);
 
             return await _equipmentTypeRepository.DeleteAsync(equipmentTypeId, cancellationToken);
         }

@@ -4,6 +4,10 @@ namespace HelpDeskMaster.Domain.Abstractions
 {
     public abstract class Entity
     {
+        protected Entity()
+        {
+        }
+
         protected Entity(Guid id, DateTimeOffset createdAt)
         {
             Id = id;

@@ -1,7 +1,9 @@
-﻿using HelpDeskMaster.Domain.Entities.WorkCategories;
+﻿using HelpDeskMaster.Domain.Entities.Users;
+using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
 using HelpDeskMaster.Persistence.Data;
 using HelpDeskMaster.Persistence.Data.Repositories;
+using HelpDeskMaster.Persistence.Data.Repositories.User;
 using HelpDeskMaster.Persistence.Data.Repositories.WorkRequest;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,7 @@ namespace HelpDeskMaster.Persistence.DependencyInjection
 
             services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IWorkCategoryRepository, WorkCategoryRepository>()
                 .AddScoped<IWorkDirectionRepository, WorkDirectionRepository>();
 

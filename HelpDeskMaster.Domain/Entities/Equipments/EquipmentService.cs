@@ -15,14 +15,16 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             _equipmentRepository = equipmentRepository;
         }
 
-        public Equipment CreateEquipment(Guid equipmentTypeId,
+        public async Task<Equipment> CreateEquipmentAsync(Guid equipmentTypeId,
             string? model,
             DateTimeOffset commissioningDate,
             string? factoryNumber,
             decimal price,
-            Guid? departmentId)
+            Guid? departmentId,
+            CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentIntention.Create);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentIntention.Create, 
+                cancellationToken);
 
             var equipment = new Equipment(Guid.NewGuid(),
                 equipmentTypeId,
@@ -38,16 +40,18 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             return equipment;
         }
 
-        public async Task<bool> UpdateEquipment(Equipment equipment, CancellationToken cancellationToken)
+        public async Task<bool> UpdateEquipmentAsync(Equipment equipment, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentIntention.Update);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentIntention.Update, 
+                cancellationToken);
 
             return await _equipmentRepository.UpdateAsync(equipment, cancellationToken);
         }
 
-        public async Task<bool> DeleteEquipment(Guid equipmentId, CancellationToken cancellationToken)
+        public async Task<bool> DeleteEquipmentAsync(Guid equipmentId, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentIntention.Delete);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentIntention.Delete, 
+                cancellationToken);
 
             return await _equipmentRepository.DeleteAsync(equipmentId, cancellationToken);
         }

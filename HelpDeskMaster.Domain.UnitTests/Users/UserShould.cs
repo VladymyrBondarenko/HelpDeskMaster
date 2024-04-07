@@ -20,21 +20,5 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
 
             FluentActions.Invoking(Create).Should().Throw<ArgumentException>();
         }
-
-        [Fact]
-        public void ThrowArgumentException_WhenPhoneNumberIsNull()
-        {
-            var login = new Login("some.email@domain.com");
-            string? phoneNumber = null;
-
-            Action Create = () =>
-            {
-#pragma warning disable CS8604 // Possible null reference argument.
-                User.Create(login, phoneNumber);
-#pragma warning restore CS8604 // Possible null reference argument.
-            };
-
-            FluentActions.Invoking(Create).Should().Throw<ArgumentException>();
-        }
     }
 }

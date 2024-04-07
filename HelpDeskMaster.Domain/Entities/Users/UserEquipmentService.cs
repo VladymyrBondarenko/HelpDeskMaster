@@ -4,7 +4,7 @@ using HelpDeskMaster.Domain.Exceptions.UserExceptions;
 
 namespace HelpDeskMaster.Domain.Entities.Users
 {
-    public class UserEquipmentService
+    internal class UserEquipmentService
     {
         private readonly IUserEquipmentRepository _userEquipmentRepository;
         private readonly IIntentionManager _intentionManager;
@@ -19,7 +19,8 @@ namespace HelpDeskMaster.Domain.Entities.Users
         public async Task AssignEquipmentToUserAsync(User user, Guid equipmentId, DateTimeOffset assignDate, 
             CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentOwnerIntention.Assign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Assign, 
+                cancellationToken);
 
             if (await _userEquipmentRepository.IsEquipmentAssignedAsync(equipmentId, assignDate, cancellationToken))
             {
@@ -31,9 +32,11 @@ namespace HelpDeskMaster.Domain.Entities.Users
             _userEquipmentRepository.Insert(userEquipment);
         }
 
-        public void UnassignEquipmentFromUser(User user, Guid equipmentId, DateTimeOffset unassignDate)
+        public async Task UnassignEquipmentFromUserAsync(User user, Guid equipmentId, DateTimeOffset unassignDate,
+            CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageEquipmentOwnerIntention.Unassign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Unassign, 
+                cancellationToken);
 
             var userEquipment = user.Equipments.SingleOrDefault(x =>
                 x.EquipmentId == equipmentId

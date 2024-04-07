@@ -26,12 +26,12 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         #region AssignExecuterToRequest
 
         [Fact]
-        public void AssignExecuterToRequest_ShouldAssignExecuterToRequest()
+        public async Task AssignExecuterToRequest_ShouldAssignExecuterToRequest()
         {
             var intention = ManageRequestExecutorIntention.Assign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(true);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -55,7 +55,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
 
             var executerId = new Guid("350f6ee0-1914-42ad-824f-3fc0872c160d");
 
-            _sut.AssignExecuterToRequest(workRequest, executerId);
+            await _sut.AssignExecuterToRequestAsync(workRequest, executerId, CancellationToken.None);
 
             workRequest.ExecuterId.Should().Be(executerId);
         }
@@ -65,8 +65,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         {
             var intention = ManageRequestExecutorIntention.Assign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(false);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(false);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -88,8 +88,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
 
             var executerId = new Guid("350f6ee0-1914-42ad-824f-3fc0872c160d");
 
-            _sut.Invoking(x => x.AssignExecuterToRequest(workRequest, executerId))
-                .Should().Throw<IntentionManagerException>();
+            _sut.Invoking(x => x.AssignExecuterToRequestAsync(workRequest, executerId, CancellationToken.None))
+                .Should().ThrowAsync<IntentionManagerException>();
         }
 
         [Fact]
@@ -97,8 +97,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         {
             var intention = ManageRequestExecutorIntention.Assign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(true);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -120,8 +120,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
 
             var executerId = new Guid("350f6ee0-1914-42ad-824f-3fc0872c160d");
 
-            _sut.Invoking(x => x.AssignExecuterToRequest(workRequest, executerId))
-                .Should().Throw<WorkRequestAssigningExecutorToRequestStageException>();
+            _sut.Invoking(x => x.AssignExecuterToRequestAsync(workRequest, executerId, CancellationToken.None))
+                .Should().ThrowAsync<WorkRequestAssigningExecutorToRequestStageException>();
         }
 
         #endregion
@@ -129,12 +129,12 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         #region UnassignExecuterToRequest
 
         [Fact]
-        public void UnassignExecuterToRequest_ShouldAssignExecuterToRequest()
+        public async Task UnassignExecuterToRequest_ShouldAssignExecuterToRequest()
         {
             var intention = ManageRequestExecutorIntention.Unassign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(true);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -156,7 +156,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
 
             workRequest.ChangeRequestStage(WorkRequestStage.Assignment);
 
-            _sut.UnassignExecuterFromRequest(workRequest);
+            await _sut.UnassignExecuterFromRequestAsync(workRequest, CancellationToken.None);
 
             workRequest.ExecuterId.Should().BeNull();
         }
@@ -166,8 +166,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         {
             var intention = ManageRequestExecutorIntention.Unassign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(false);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(false);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -187,8 +187,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 createdAt,
                 null);
 
-            _sut.Invoking(x => x.UnassignExecuterFromRequest(workRequest))
-                .Should().Throw<IntentionManagerException>();
+            _sut.Invoking(x => x.UnassignExecuterFromRequestAsync(workRequest, CancellationToken.None))
+                .Should().ThrowAsync<IntentionManagerException>();
         }
 
         [Fact]
@@ -196,8 +196,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         {
             var intention = ManageRequestExecutorIntention.Unassign;
 
-            _intentionManagerMock.Setup(x => x.IsAllowed(intention))
-                .Returns(true);
+            _intentionManagerMock.Setup(x => x.IsAllowedAsync(intention, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -219,8 +219,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
 
             var executerId = new Guid("350f6ee0-1914-42ad-824f-3fc0872c160d");
 
-            _sut.Invoking(x => x.UnassignExecuterFromRequest(workRequest))
-                .Should().Throw<WorkRequestUnassigningExecutorToRequestStageException>();
+            _sut.Invoking(x => x.UnassignExecuterFromRequestAsync(workRequest, CancellationToken.None))
+                .Should().ThrowAsync<WorkRequestUnassigningExecutorToRequestStageException>();
         }
 
         #endregion
@@ -250,8 +250,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Add, workRequest))
-                .Returns(false);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
+                .ReturnsAsync(false);
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
                 .ReturnsAsync(true);
@@ -283,8 +283,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Add, workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
                 .ReturnsAsync(false);
@@ -316,8 +316,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Add, workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
                 .ReturnsAsync(true);
@@ -357,8 +357,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
             var workRequestEquipment = workRequest.AddEquipmentToRequest(equipmentId);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Remove, workRequest))
-                .Returns(false);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
+                .ReturnsAsync(false);
 
             await _sut.Invoking(x => x.RemoveEquipmentFromRequestAsync(workRequest, workRequestEquipment.Id, CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
@@ -388,8 +388,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
             var workRequestEquipment = workRequest.AddEquipmentToRequest(equipmentId);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Remove, workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             await _sut.Invoking(x => x.RemoveEquipmentFromRequestAsync(workRequest,
                     new Guid("3926ed81-bc51-4a25-b710-1a32b72a8f60"), CancellationToken.None))
@@ -420,8 +420,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
             var workRequestEquipment = workRequest.AddEquipmentToRequest(equipmentId);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Remove, workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
                 .ReturnsAsync(false);
@@ -455,8 +455,8 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
             var workRequestEquipment = workRequest.AddEquipmentToRequest(equipmentId);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageRequestEquipmentIntention.Remove, workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
                 .ReturnsAsync(true);

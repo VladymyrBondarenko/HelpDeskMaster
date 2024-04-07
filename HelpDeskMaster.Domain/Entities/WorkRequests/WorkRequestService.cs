@@ -18,9 +18,11 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             _userEquipmentRepository = userEquipmentRepository;
         }
 
-        public void AssignExecuterToRequest(WorkRequest workRequest, Guid executerId)
+        public async Task AssignExecuterToRequestAsync(WorkRequest workRequest, Guid executerId, 
+            CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageRequestExecutorIntention.Assign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageRequestExecutorIntention.Assign, 
+                cancellationToken);
 
             if (workRequest.RequestStageChanges.Count == 0)
             {
@@ -38,9 +40,10 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             workRequest.AssignExecuterToRequest(executerId);
         }
 
-        public void UnassignExecuterFromRequest(WorkRequest workRequest)
+        public async Task UnassignExecuterFromRequestAsync(WorkRequest workRequest, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageRequestExecutorIntention.Unassign);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageRequestExecutorIntention.Unassign, 
+                cancellationToken);
 
             if (workRequest.RequestStageChanges.Count == 0)
             {
@@ -61,7 +64,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
         public async Task<WorkRequestEquipment> AddEquipmentToRequestAsync(WorkRequest workRequest, Guid equipmentId, 
             CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageRequestEquipmentIntention.Add, workRequest);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageRequestEquipmentIntention.Add, workRequest,
+                cancellationToken);
 
             if (await _userEquipmentRepository.IsEquipmentAssignedToUserAsync(
                 equipmentId, workRequest.AuthorId, cancellationToken) == false)
@@ -75,7 +79,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
         public async Task<bool> RemoveEquipmentFromRequestAsync(WorkRequest workRequest, Guid workRequestEquipmentId,
             CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageRequestEquipmentIntention.Remove, workRequest);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageRequestEquipmentIntention.Remove, workRequest, 
+                cancellationToken);
 
             var workRequestEquipment = workRequest.Equipments.FirstOrDefault(x => x.Id == workRequestEquipmentId);
 

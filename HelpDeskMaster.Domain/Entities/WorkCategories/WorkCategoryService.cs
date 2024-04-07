@@ -18,7 +18,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkCategories
 
         public async Task<WorkCategory> CreateWorkCategoryAsync(string title, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageWorkCategoryIntention.Create);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageWorkCategoryIntention.Create, 
+                cancellationToken);
 
             var workCategory = new WorkCategory(Guid.NewGuid(), DateTimeOffset.UtcNow, title);
 
@@ -29,7 +30,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkCategories
 
         public async Task DeleteWorkCategoryAsync(Guid workCategoryId, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageWorkCategoryIntention.Delete);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageWorkCategoryIntention.Delete, 
+                cancellationToken);
 
             if (await _workCategoryRepository.IsWorkCategoryUsedAsync(workCategoryId, cancellationToken))
             {

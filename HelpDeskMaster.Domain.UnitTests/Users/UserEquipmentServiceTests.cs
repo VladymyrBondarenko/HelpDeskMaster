@@ -27,8 +27,8 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
         public async Task AssignEquipmentToUserAsync_ShouldAssignEquipmentToUser()
         {
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Assign))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Assign, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -53,8 +53,8 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
         public void AssignEquipmentToUserAsync_ShouldThrowIntentionManagerException_WhenForbidden()
         {
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Assign))
-                .Returns(false);
+                .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Assign, CancellationToken.None))
+                .ReturnsAsync(false);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -77,8 +77,8 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
         public async Task AssignEquipmentToUserAsync_ShouldThrowEquipmentAlreadyAssignedToUserException_WhenAssignAlreadyAssinedEquipmentToUser()
         {
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Assign))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Assign, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -102,11 +102,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
         #region UnassignEquipmentFromUser
 
         [Fact]
-        public void UnassignEquipmentFromUser_ShouldUnassignEquipmentFromUser()
+        public async Task UnassignEquipmentFromUser_ShouldUnassignEquipmentFromUser()
         {
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Unassign))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Unassign, CancellationToken.None))
+                .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -127,7 +127,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.UnassignEquipmentFromUser(user, equipmentId, unassignDate);
+            await _sut.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None);
 
             user.Equipments.First(x => x.EquipmentId == equipmentId)
                 .UnassignedDate.Should().Be(unassignDate);
@@ -137,8 +137,8 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
         public void UnassignEquipmentFromUser_ShouldThrowIntentionManagerException_WhenForbidden()
         {
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Unassign))
-                .Returns(false);
+                .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Unassign, CancellationToken.None))
+                .ReturnsAsync(false);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -159,16 +159,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUser(user, equipmentId, unassignDate))
-                .Should().Throw<IntentionManagerException>();
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+                .Should().ThrowAsync<IntentionManagerException>();
         }
 
         [Fact]
         public void UnassignEquipmentFromUser_ShouldThrowUserEquipmentNotFoundToUnassignException_WhenEquipmentIsGone()
         {
             _intentionManagerMock
-               .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Unassign))
-               .Returns(true);
+               .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Unassign, CancellationToken.None))
+               .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -188,16 +188,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUser(user, equipmentId, unassignDate))
-                .Should().Throw<UserEquipmentNotFoundToUnassignException>();
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+                .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 
         [Fact]
         public void UnassignEquipmentFromUser_ShouldThrowUserEquipmentNotFoundToUnassignException_WhenUnassignDateEarlierThatAssignedDate()
         {
             _intentionManagerMock
-               .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Unassign))
-               .Returns(true);
+               .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Unassign, CancellationToken.None))
+               .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -218,16 +218,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUser(user, equipmentId, unassignDate))
-                .Should().Throw<UserEquipmentNotFoundToUnassignException>();
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+                .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 
         [Fact]
         public void UnassignEquipmentFromUser_ShouldThrowUserEquipmentNotFoundToUnassignException_WhenEquipmentAlreadyUnassigned()
         {
             _intentionManagerMock
-               .Setup(x => x.IsAllowed(ManageEquipmentOwnerIntention.Unassign))
-               .Returns(true);
+               .Setup(x => x.IsAllowedAsync(ManageEquipmentOwnerIntention.Unassign, CancellationToken.None))
+               .ReturnsAsync(true);
 
             var equipmentId = new Guid("cba9efe6-ae1e-4b6b-9227-a11b62f65af7");
             var equipmentTypeId = new Guid("aaca677b-5ad4-474c-8571-bf49c036ec6c");
@@ -254,8 +254,8 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUser(user, equipmentId, unassignDateSecond))
-                .Should().Throw<UserEquipmentNotFoundToUnassignException>();
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDateSecond, CancellationToken.None))
+                .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 
         #endregion

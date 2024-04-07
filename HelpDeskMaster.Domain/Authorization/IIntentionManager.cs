@@ -2,26 +2,30 @@
 {
     public interface IIntentionManager
     {
-        bool IsAllowed<TIntention>(TIntention intention) where TIntention : struct;
+        Task<bool> IsAllowedAsync<TIntention>(TIntention intention,
+            CancellationToken cancellationToken) where TIntention : struct;
 
-        bool IsAllowed<TIntention, TObject>(TIntention intention, TObject intentionObject) where TIntention : struct;
+        Task<bool> IsAllowedAsync<TIntention, TObject>(TIntention intention, TObject intentionObject,
+            CancellationToken cancellationToken) where TIntention : struct;
     }
 
     public static class IntentionManagerExtentions
     {
-        public static void ThrowIfForbidden<TIntention>(this IIntentionManager intentionManager,
-            TIntention intention) where TIntention : struct
+        public async static Task ThrowIfForbiddenAsync<TIntention>(
+            this IIntentionManager intentionManager, TIntention intention, 
+            CancellationToken cancellationToken) where TIntention : struct
         {
-            if (!intentionManager.IsAllowed(intention))
+            if (!(await intentionManager.IsAllowedAsync(intention, cancellationToken)))
             {
                 throw new IntentionManagerException();
             }
         }
 
-        public static void ThrowIfForbidden<TIntention, TObject>(this IIntentionManager intentionManager,
-            TIntention intention, TObject @object) where TIntention : struct
+        public async static Task ThrowIfForbiddenAsync<TIntention, TObject>(
+            this IIntentionManager intentionManager, TIntention intention, TObject @object, 
+            CancellationToken cancellationToken) where TIntention : struct
         {
-            if (!intentionManager.IsAllowed(intention, @object))
+            if (!(await intentionManager.IsAllowedAsync(intention, @object, cancellationToken)))
             {
                 throw new IntentionManagerException();
             }

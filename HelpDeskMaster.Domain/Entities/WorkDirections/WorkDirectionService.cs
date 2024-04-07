@@ -18,7 +18,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkDirections
 
         public async Task<WorkDirection> CreateWorkDirectionAsync(string title, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageWorkDirectionIntention.Create);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageWorkDirectionIntention.Create, 
+                cancellationToken);
 
             var workDirection = new WorkDirection(
                 Guid.NewGuid(), DateTimeOffset.UtcNow, title);
@@ -30,7 +31,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkDirections
 
         public async Task DeleteWorkDirectionAsync(Guid workDirectionId, CancellationToken cancellationToken)
         {
-            _intentionManager.ThrowIfForbidden(ManageWorkDirectionIntention.Delete);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageWorkDirectionIntention.Delete, 
+                cancellationToken);
 
             if (await _workDirectionRepository.IsWorkDirectionUsed(workDirectionId, cancellationToken))
             {

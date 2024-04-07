@@ -22,7 +22,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         #region MoveRequestStageNext
 
         [Fact]
-        public void MoveRequestStageNext_ShouldChangeWorkRequestStageToAssignment_WhenMoveNextOnNewRequestStage()
+        public async Task MoveRequestStageNext_ShouldChangeWorkRequestStageToAssignment_WhenMoveNextOnNewRequestStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -43,11 +43,11 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(2);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -55,7 +55,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageNext_ShouldChangeWorkRequestStageToInWork_WhenMoveNextOnAssignmentStage()
+        public async Task MoveRequestStageNext_ShouldChangeWorkRequestStageToInWork_WhenMoveNextOnAssignmentStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -76,14 +76,14 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(3);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -92,7 +92,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageNext_ShouldChangeWorkRequestStageToDone_WhenMoveNextOnInWorkStage()
+        public async Task MoveRequestStageNext_ShouldChangeWorkRequestStageToDone_WhenMoveNextOnInWorkStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -113,17 +113,17 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Done
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(4);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -133,7 +133,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageNext_ShouldChangeWorkRequestStageToArchive_WhenMoveNextOnDoneStage()
+        public async Task MoveRequestStageNext_ShouldChangeWorkRequestStageToArchive_WhenMoveNextOnDoneStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -154,20 +154,20 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Done
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Done -> Arhive
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(5);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -178,7 +178,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageNext_ShouldWorkRequestNextStageResolvingException_WhenMoveNextOnArhiveStage()
+        public async Task MoveRequestStageNext_ShouldWorkRequestNextStageResolvingException_WhenMoveNextOnArhiveStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -199,25 +199,25 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Done
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Done -> Arhive
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Invalid move next
-            _sut.Invoking(x => x.MoveRequestStageNext(workRequest))
+            await _sut.Invoking(x => x.MoveRequestStageNextAsync(workRequest, CancellationToken.None))
                 .Should()
-                .Throw<WorkRequestNextStageResolvingException>();
+                .ThrowAsync<WorkRequestNextStageResolvingException>();
         }
 
         #endregion
@@ -225,7 +225,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         #region MoveRequestStageBack
 
         [Fact]
-        public void MoveRequestStageBack_ShouldChangeWorkRequestStageToAssignment_WhenMoveBackOnInWorkStage()
+        public async Task MoveRequestStageBack_ShouldChangeWorkRequestStageToAssignment_WhenMoveBackOnInWorkStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -246,17 +246,17 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Assignment
-            _sut.MoveRequestStageBack(workRequest);
+            await _sut.MoveRequestStageBackAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(4);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -266,7 +266,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageBack_ShouldChangeWorkRequestStageToInWork_WhenMoveBackOnDoneStage()
+        public async Task MoveRequestStageBack_ShouldChangeWorkRequestStageToInWork_WhenMoveBackOnDoneStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -287,20 +287,20 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Done
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Done -> InWork
-            _sut.MoveRequestStageBack(workRequest);
+            await _sut.MoveRequestStageBackAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(5);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -311,7 +311,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageBack_ShouldChangeWorkRequestStageToInWork_WhenMoveBackOnArchiveStage()
+        public async Task MoveRequestStageBack_ShouldChangeWorkRequestStageToInWork_WhenMoveBackOnArchiveStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -332,23 +332,23 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Assignment -> InWork
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // InWork -> Done
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Done -> Archive
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Archive -> InWork
-            _sut.MoveRequestStageBack(workRequest);
+            await _sut.MoveRequestStageBackAsync(workRequest, CancellationToken.None);
 
             workRequest.RequestStageChanges.Should().HaveCount(6);
             workRequest.RequestStageChanges[0].Stage.Should().Be(WorkRequestStage.NewRequest);
@@ -360,7 +360,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
         }
 
         [Fact]
-        public void MoveRequestStageBack_ShouldThrowWorkRequestPreviousStageResolvingException_WhenMoveBackOnAssignmentStage()
+        public async Task MoveRequestStageBack_ShouldThrowWorkRequestPreviousStageResolvingException_WhenMoveBackOnAssignmentStage()
         {
             var workRequestId = new Guid("1f7321f3-f858-41a2-a83c-60f9b8893f03");
             var ownerId = new Guid("88d5d128-b202-4c52-b7d1-82aea236604e");
@@ -381,15 +381,15 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 null);
 
             _intentionManagerMock
-                .Setup(x => x.IsAllowed(It.IsAny<WorkRequestStageChangeIntention>(), workRequest))
-                .Returns(true);
+                .Setup(x => x.IsAllowedAsync(It.IsAny<WorkRequestStageChangeIntention>(), workRequest, CancellationToken.None))
+                .ReturnsAsync(true);
 
             // NewRequest -> Assignment
-            _sut.MoveRequestStageNext(workRequest);
+            await _sut.MoveRequestStageNextAsync(workRequest, CancellationToken.None);
 
             // Invalid move back
-            _sut.Invoking(x => x.MoveRequestStageBack(workRequest))
-                .Should().Throw<WorkRequestPreviousStageResolvingException>();
+            await _sut.Invoking(x => x.MoveRequestStageBackAsync(workRequest, CancellationToken.None))
+                .Should().ThrowAsync<WorkRequestPreviousStageResolvingException>();
         }
 
         #endregion
