@@ -2,7 +2,7 @@
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Extensions;
 using HelpDeskMaster.Infrastracture.Exceptions;
-using HelpDeskMaster.Persistence.Data;
+using HelpDeskMaster.Persistence.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -11,15 +11,15 @@ namespace HelpDeskMaster.Infrastracture.Authentication
     internal class IdentityProvider : IIdentityProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUserService _userService;
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public IdentityProvider(IHttpContextAccessor httpContextAccessor,
-            IUserService userService, ApplicationDbContext dbContext)
+            IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             _httpContextAccessor = httpContextAccessor;
-            _userService = userService;
-            _dbContext = dbContext;
+            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IIdentity> GetIdentityAsync(CancellationToken cancellationToken)
@@ -62,11 +62,25 @@ namespace HelpDeskMaster.Infrastracture.Authentication
         private async Task syncUserInDb(string email, string? phoneNumber, 
             CancellationToken cancellationToken)
         {
-            var user = User.Create(new Login(email), phoneNumber);
+            var existingUser = await _userRepository.GetAsync(email, cancellationToken);
 
-            await _userService.CreateOrUpdateUserAsync(user, cancellationToken);
+            if (existingUser != null)
+            {
+                if (phoneNumber != existingUser.PhoneNumber)
+                {
+                    existingUser.UpdatePhoneNumber(phoneNumber);
+                    _userRepository.Update(existingUser);
 
-            await _dbContext.SaveChangesAsync();
+                    await _unitOfWork.SaveChangesAsync(cancellationToken);
+                }
+            }
+            else
+            {
+                var newUser = User.Create(new Login(email), phoneNumber);
+                await _userRepository.InsertAsync(newUser, cancellationToken);
+
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
         }
     }
 }

@@ -3,6 +3,6 @@ namespace HelpDeskMaster.Domain.Entities.Users
 {
     public interface IUserService
     {
-        Task CreateOrUpdateUserAsync(User user, CancellationToken cancellationToken);
+        Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken);
     }
 }

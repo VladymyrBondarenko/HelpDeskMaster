@@ -1,6 +1,6 @@
-﻿using HelpDeskMaster.Domain.Authentication;
-using HelpDeskMaster.Domain.Authorization;
+﻿using HelpDeskMaster.Domain.Authorization;
 using HelpDeskMaster.Domain.Entities.Users;
+using HelpDeskMaster.Domain.Entities.Users.Intentions;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkCategories.Intentions;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
@@ -20,6 +20,7 @@ namespace HelpDeskMaster.Domain.DependencyInjection
 
             services.AddScoped<IIntentionResolver, ManageWorkCategoryIntentionResolver>()
                 .AddScoped<IIntentionResolver, ManageWorkDirectionIntentionResolver>()
+                .AddScoped<IIntentionResolver, ManageUserIntentionResolver>()
                 .AddScoped<IIntentionManager, IntentionManager>();
 
             return services;

@@ -1,30 +1,34 @@
-﻿namespace HelpDeskMaster.Domain.Entities.Users
+﻿using HelpDeskMaster.Domain.Authorization;
+using HelpDeskMaster.Domain.Entities.Users.Intentions;
+using HelpDeskMaster.Domain.Exceptions.UserExceptions;
+
+namespace HelpDeskMaster.Domain.Entities.Users
 {
     internal class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IIntentionManager _intentionManager;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository,
+            IIntentionManager intentionManager)
         {
             _userRepository = userRepository;
+            _intentionManager = intentionManager;
         }
 
-        public async Task CreateOrUpdateUserAsync(User user, CancellationToken cancellationToken)
+        public async Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
         {
-            var existingUser = await _userRepository.GetAsync(user.Login.Value, cancellationToken);
+            await _intentionManager.ThrowIfForbiddenAsync(ManageUserIntention.GetUserByLogin, 
+                cancellationToken);
 
-            if (existingUser != null)
+            var user = await _userRepository.GetAsync(login, cancellationToken);
+
+            if(user == null)
             {
-                if(user.PhoneNumber != existingUser.PhoneNumber)
-                {
-                    user.UpdatePhoneNumber(existingUser.PhoneNumber);
-                    _userRepository.Update(user);
-                }
+                throw new UserIsGoneException(login);
             }
-            else
-            {
-                await _userRepository.InsertAsync(user, cancellationToken);
-            }
+
+            return user;
         }
     }
 }
