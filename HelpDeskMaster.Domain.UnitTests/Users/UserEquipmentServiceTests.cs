@@ -11,14 +11,19 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
     {
         private readonly Mock<IUserEquipmentRepository> _userEquipmentRepositoryMock;
         private readonly Mock<IIntentionManager> _intentionManagerMock;
+        private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly UserEquipmentService _sut;
 
         public UserEquipmentServiceTests()
         {
             _userEquipmentRepositoryMock = new Mock<IUserEquipmentRepository>();
-            _intentionManagerMock = new Mock<IIntentionManager>(); 
+            _intentionManagerMock = new Mock<IIntentionManager>();
+            _userRepositoryMock = new Mock<IUserRepository>();
 
-            _sut = new UserEquipmentService(_userEquipmentRepositoryMock.Object, _intentionManagerMock.Object);
+            _sut = new UserEquipmentService(
+                _userRepositoryMock.Object, 
+                _userEquipmentRepositoryMock.Object, 
+                _intentionManagerMock.Object);
         }
 
         #region AssignEquipmentToUserAsync
@@ -37,13 +42,17 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
-
-            await _sut.AssignEquipmentToUserAsync(user, equipmentId, assignDate, CancellationToken.None);
+            await _sut.AssignEquipmentToUserAsync(userId, equipmentId, assignDate, CancellationToken.None);
 
             user.Equipments.Should().ContainSingle();
             user.Equipments.First().EquipmentId.Should().Be(equipmentId);
@@ -63,13 +72,17 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
-
-            _sut.Invoking(x => x.AssignEquipmentToUserAsync(user, equipmentId, assignDate, CancellationToken.None))
+            _sut.Invoking(x => x.AssignEquipmentToUserAsync(userId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
         }
 
@@ -87,13 +100,17 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
-
-            await _sut.Invoking(x => x.AssignEquipmentToUserAsync(user, equipmentId, assignDate, CancellationToken.None))
+            await _sut.Invoking(x => x.AssignEquipmentToUserAsync(userId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<EquipmentAlreadyAssignedToUserException>();
         }
 
@@ -115,11 +132,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
             user.AssignEquipment(equipmentId, assignDate);
 
             var unassignDate = new DateTimeOffset(
@@ -127,7 +149,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            await _sut.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None);
+            await _sut.UnassignEquipmentFromUserAsync(userId, equipmentId, unassignDate, CancellationToken.None);
 
             user.Equipments.First(x => x.EquipmentId == equipmentId)
                 .UnassignedDate.Should().Be(unassignDate);
@@ -147,11 +169,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
             user.AssignEquipment(equipmentId, assignDate);
 
             var unassignDate = new DateTimeOffset(
@@ -159,7 +186,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(userId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
         }
 
@@ -177,18 +204,22 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
-
-            var user = User.Create(new Login("some@email"), "123456789");
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
             var unassignDate = new DateTimeOffset(
                 2024, 2, 28,
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(userId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 
@@ -206,11 +237,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
             user.AssignEquipment(equipmentId, assignDate);
 
             var unassignDate = new DateTimeOffset(
@@ -218,7 +254,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDate, CancellationToken.None))
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(userId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 
@@ -236,11 +272,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
+            var userId = new Guid("9797f405-675f-4661-bbc1-7d565deb51c7");
+            var user = User.Create(userId, new Login("some@email"), "123456789");
+
             _userEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(userId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
 
-            var user = User.Create(new Login("some@email"), "123456789");
             var userEquipment = user.AssignEquipment(equipmentId, assignDate);
 
             var unassignDateFirst = new DateTimeOffset(
@@ -254,7 +295,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(user, equipmentId, unassignDateSecond, CancellationToken.None))
+            _sut.Invoking(x => x.UnassignEquipmentFromUserAsync(userId, equipmentId, unassignDateSecond, CancellationToken.None))
                 .Should().ThrowAsync<UserEquipmentNotFoundToUnassignException>();
         }
 

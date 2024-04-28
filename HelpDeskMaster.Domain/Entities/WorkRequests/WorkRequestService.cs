@@ -68,7 +68,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
                 cancellationToken);
 
             if (await _userEquipmentRepository.IsEquipmentAssignedToUserAsync(
-                equipmentId, workRequest.AuthorId, cancellationToken) == false)
+                equipmentId, workRequest.AuthorId, workRequest.CreatedAt, cancellationToken) == false)
             {
                 throw new EquipmentIsNotAssignedToWorkRequestAuthorException(equipmentId, workRequest.AuthorId);
             }
@@ -90,7 +90,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             }
 
             if (await _userEquipmentRepository.IsEquipmentAssignedToUserAsync(
-                workRequestEquipment.EquipmentId, workRequest.AuthorId, cancellationToken) == false)
+                workRequestEquipment.EquipmentId, workRequest.AuthorId, workRequest.CreatedAt, cancellationToken) == false)
             {
                 throw new EquipmentIsNotAssignedToWorkRequestAuthorException(
                     workRequestEquipment.EquipmentId, workRequest.AuthorId);

@@ -4,8 +4,10 @@
     {
         Task<User?> GetAsync(string login, CancellationToken cancellationToken);
 
-        public Task InsertAsync(User user, CancellationToken cancellationToken);
+        Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken);
 
-        public void Update(User user);
+        Task InsertAsync(User user, CancellationToken cancellationToken);
+
+        void Update(User user);
     }
 }

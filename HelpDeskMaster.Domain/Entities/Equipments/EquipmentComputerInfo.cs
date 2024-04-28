@@ -6,6 +6,7 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
     public class EquipmentComputerInfo : Entity
     {
         public EquipmentComputerInfo(Guid id,
+            Guid computerId,
             string code,
             string nameInNet,
             int warrantyMonths,
@@ -13,12 +14,15 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             DateTimeOffset warrantyCardDate,
             DateTimeOffset createdAt) : base(id, createdAt)
         {
+            ComputerId = Guard.Against.Default(computerId);
             Code = Guard.Against.NullOrWhiteSpace(code);
             NameInNet = Guard.Against.NullOrWhiteSpace(nameInNet);
             WarrantyMonths = Guard.Against.Negative(warrantyMonths);
             InvoiceDate = invoiceDate;
             WarrantyCardDate = warrantyCardDate;
         }
+
+        public Guid ComputerId { get; set; }
 
         public string Code { get; private set; }
 

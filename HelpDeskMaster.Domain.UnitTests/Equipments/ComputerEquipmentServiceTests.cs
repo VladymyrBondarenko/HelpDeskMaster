@@ -11,14 +11,19 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
     {
         private readonly Mock<IComputerEquipmentRepository> _computerEquipmentRepositoryMock;
         private readonly Mock<IIntentionManager> _intentionManagerMock;
+        private readonly Mock<IEquipmentRepository> _equipmentRepositoryMock;
         private readonly ComputerEquipmentService _sut;
 
         public ComputerEquipmentServiceTests()
         {
             _computerEquipmentRepositoryMock = new Mock<IComputerEquipmentRepository>();
             _intentionManagerMock = new Mock<IIntentionManager>();
+            _equipmentRepositoryMock = new Mock<IEquipmentRepository>();
 
-            _sut = new ComputerEquipmentService(_computerEquipmentRepositoryMock.Object, _intentionManagerMock.Object);
+            _sut = new ComputerEquipmentService(
+                _equipmentRepositoryMock.Object, 
+                _computerEquipmentRepositoryMock.Object, 
+                _intentionManagerMock.Object);
         }
 
         #region AssignEquipmentToComputerAsync
@@ -47,7 +52,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             _computerEquipmentRepositoryMock
@@ -59,8 +63,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
             _computerEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _equipmentRepositoryMock.Setup(x => 
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
 
-            await _sut.AssignEquipmentToComputerAsync(computer, equipmentId, assignDate, CancellationToken.None);
+            await _sut.AssignEquipmentToComputerAsync(computerId, equipmentId, assignDate, CancellationToken.None);
 
             computer.ComputerEquipments.Should().ContainSingle();
             computer.ComputerEquipments.First().EquipmentId.Should().Be(equipmentId);
@@ -90,7 +97,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             _computerEquipmentRepositoryMock
@@ -102,8 +108,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
             _computerEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
 
-            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computer, equipmentId, assignDate, CancellationToken.None))
+            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computerId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
         }
 
@@ -130,10 +139,13 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
-            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computer, computerId, assignDate, CancellationToken.None))
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computerId, computerId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<AssignComputerToItselfException>();
         }
 
@@ -161,14 +173,16 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             _computerEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentComputerAsync(computerId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
 
-            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computer, equipmentId, assignDate, CancellationToken.None))
+            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computerId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<AssignEquipmentNotToComputerException>();
         }
 
@@ -196,7 +210,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             _computerEquipmentRepositoryMock
@@ -205,8 +218,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
             _computerEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentComputerAsync(equipmentId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
 
-            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computer, equipmentId, assignDate, CancellationToken.None))
+            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computerId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<AssignToComputerNotEquipmentException>();
         }
 
@@ -234,7 +250,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             _computerEquipmentRepositoryMock
@@ -246,8 +261,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
             _computerEquipmentRepositoryMock
                 .Setup(x => x.IsEquipmentAssignedAsync(equipmentId, assignDate, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
 
-            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computer, equipmentId, assignDate, CancellationToken.None))
+            await _sut.Invoking(x => x.AssignEquipmentToComputerAsync(computerId, equipmentId, assignDate, CancellationToken.None))
                 .Should().ThrowAsync<EquipmentAlreadyAssignedToComputerException>();
         }
 
@@ -279,7 +297,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             computer.AssignEquipmentToComputer(equipmentId, assignDate);
@@ -289,7 +306,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                 12, 34, 5,
                 new TimeSpan());
 
-            await _sut.UnassignEquipmentFromComputerAsync(computer, equipmentId, unassignDate, CancellationToken.None);
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            await _sut.UnassignEquipmentFromComputerAsync(computerId, equipmentId, unassignDate, CancellationToken.None);
 
             computer.ComputerEquipments.First(x => x.EquipmentId == equipmentId)
                 .UnassignedDate.Should().Be(unassignDate);
@@ -319,7 +340,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             computer.AssignEquipmentToComputer(equipmentId, assignDate);
@@ -329,7 +349,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computer, equipmentId, unassignDate, CancellationToken.None))
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computerId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
         }
 
@@ -357,7 +381,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             var unassignDate = new DateTimeOffset(
@@ -365,7 +388,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computer, equipmentId, unassignDate, CancellationToken.None))
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computerId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<ComputerEquipmentNotFoundToUnassignException>();
         }
 
@@ -393,7 +420,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
 
             computer.AssignEquipmentToComputer(equipmentId, assignDate);
@@ -403,7 +429,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computer, equipmentId, unassignDate, CancellationToken.None))
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computerId, equipmentId, unassignDate, CancellationToken.None))
                 .Should().ThrowAsync<ComputerEquipmentNotFoundToUnassignException>();
         }
 
@@ -431,7 +461,6 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                assignDate,
                factoryNumber: null,
                0,
-               departmentId: null,
                assignDate);
             var computerEquipment = computer.AssignEquipmentToComputer(equipmentId, assignDate);
 
@@ -446,7 +475,11 @@ namespace HelpDeskMaster.Domain.UnitTests.Equipments
                 12, 34, 5,
                 new TimeSpan());
 
-            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computer, equipmentId, unassignDateSecond, CancellationToken.None))
+            _equipmentRepositoryMock.Setup(x =>
+                    x.GetEquipmentByIdAsync(computerId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(computer);
+
+            _sut.Invoking(x => x.UnassignEquipmentFromComputerAsync(computerId, equipmentId, unassignDateSecond, CancellationToken.None))
                 .Should().ThrowAsync<ComputerEquipmentNotFoundToUnassignException>();
         }
 

@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using HelpDeskMaster.Domain.Abstractions;
+using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 
 namespace HelpDeskMaster.Domain.Entities.Equipments
 {
@@ -11,7 +12,6 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             DateTimeOffset commissioningDate, 
             string? factoryNumber, 
             decimal price,
-            Guid? departmentId,
             DateTimeOffset createdAt) : base(id, createdAt)
         {
             EquipmentTypeId = Guard.Against.Default(equipmentTypeId);
@@ -19,10 +19,11 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
             CommissioningDate = Guard.Against.Default(commissioningDate);
             FactoryNumber = factoryNumber;
             Price = Guard.Against.Negative(price);
-            DepartmentId = departmentId;
         }
 
         public Guid EquipmentTypeId { get; private set; }
+
+        public EquipmentType? EquipmentType { get; }
 
         public string? Model { get; private set; }
 
@@ -32,13 +33,16 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
 
         public decimal Price { get; private set; }
 
-        public Guid? DepartmentId { get; private set; }
-
-        public EquipmentComputerInfo? EquipmentComputerInfo { get; }
+        public EquipmentComputerInfo? EquipmentComputerInfo { get; private set; }
 
         public IReadOnlyList<ComputerEquipment> ComputerEquipments => _computerEquipments.ToList();
 
-        private readonly HashSet<ComputerEquipment> _computerEquipments = new();
+        private readonly List<ComputerEquipment> _computerEquipments = new();
+
+        internal void AddComputerInfo(EquipmentComputerInfo computerInfo)
+        {
+            EquipmentComputerInfo = computerInfo;
+        }
 
         internal ComputerEquipment AssignEquipmentToComputer(Guid equipmentId,
             DateTimeOffset assignDate)

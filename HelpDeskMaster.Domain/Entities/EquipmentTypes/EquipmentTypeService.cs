@@ -3,7 +3,7 @@ using HelpDeskMaster.Domain.Entities.EquipmentTypes.Intentions;
 
 namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
 {
-    public class EquipmentTypeService
+    internal class EquipmentTypeService : IEquipmentTypeService
     {
         private readonly IIntentionManager _intentionManager;
         private readonly IEquipmentTypeRepository _equipmentTypeRepository;
@@ -18,33 +18,33 @@ namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
         public async Task<EquipmentType> CreateEquipmentTypeAsync(string title, TypeOfEquipment typeOfEquipment,
             CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Create, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Create,
                 cancellationToken);
 
-            var equipmentType = new EquipmentType(Guid.NewGuid(), 
-                title, 
-                DateTimeOffset.UtcNow, 
+            var equipmentType = new EquipmentType(Guid.NewGuid(),
+                title,
+                DateTimeOffset.UtcNow,
                 typeOfEquipment);
 
-            _equipmentTypeRepository.Insert(equipmentType);
+            await _equipmentTypeRepository.InsertAsync(equipmentType, cancellationToken);
 
             return equipmentType;
         }
 
-        public async Task<bool> UpdateEquipmentTypeAsync(EquipmentType equipmentType, CancellationToken cancellationToken)
+        public async Task UpdateEquipmentTypeAsync(EquipmentType equipmentType, CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Update, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Update,
                 cancellationToken);
 
-            return await _equipmentTypeRepository.UpdateAsync(equipmentType, cancellationToken);
+            _equipmentTypeRepository.Update(equipmentType);
         }
 
-        public async Task<bool> DeleteEquipmentTypeAsync(Guid equipmentTypeId, CancellationToken cancellationToken)
+        public async Task DeleteEquipmentTypeAsync(Guid equipmentTypeId, CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Delete, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentTypeIntention.Delete,
                 cancellationToken);
 
-            return await _equipmentTypeRepository.DeleteAsync(equipmentTypeId, cancellationToken);
+            await _equipmentTypeRepository.DeleteAsync(equipmentTypeId, cancellationToken);
         }
     }
 }

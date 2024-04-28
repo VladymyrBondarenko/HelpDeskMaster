@@ -6,6 +6,6 @@
 
         Task<bool> IsEquipmentComputerAsync(Guid equipmentId, CancellationToken cancellationToken);
 
-        void Insert(ComputerEquipment computerEquipment);
+        Task InsertAsync(ComputerEquipment computerEquipment, CancellationToken cancellationToken);
     }
 }

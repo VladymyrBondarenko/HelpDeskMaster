@@ -14,7 +14,7 @@ namespace HelpDeskMaster.Domain.UnitTests.Users
             Action Create = () =>
             {
 #pragma warning disable CS8604 // Possible null reference argument.
-                User.Create(login, phoneNumber);
+                User.Create(Guid.NewGuid(), login, phoneNumber);
 #pragma warning restore CS8604 // Possible null reference argument.
             };
 

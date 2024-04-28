@@ -5,6 +5,8 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
 {
     public class ComputerEquipment : Entity
     {
+        private ComputerEquipment() { }
+
         public ComputerEquipment(Guid id,
             DateTimeOffset createdAt, 
             Guid computerId,
@@ -17,6 +19,8 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
         }
 
         public Guid ComputerId { get; private set; }
+
+        public Equipment? Equipment { get; }
 
         public Guid EquipmentId { get; private set; }
 

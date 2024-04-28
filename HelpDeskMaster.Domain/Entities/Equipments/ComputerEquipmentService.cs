@@ -4,30 +4,41 @@ using HelpDeskMaster.Domain.Exceptions.EquipmentExceptions;
 
 namespace HelpDeskMaster.Domain.Entities.Equipments
 {
-    public class ComputerEquipmentService
+    public class ComputerEquipmentService : IComputerEquipmentService
     {
+        private readonly IEquipmentRepository _equipmentRepository;
         private readonly IComputerEquipmentRepository _computerEquipmentRepository;
         private readonly IIntentionManager _intentionManager;
 
-        public ComputerEquipmentService(IComputerEquipmentRepository computerEquipmentRepository,
+        public ComputerEquipmentService(IEquipmentRepository equipmentRepository,
+            IComputerEquipmentRepository computerEquipmentRepository,
             IIntentionManager intentionManager)
         {
+            _equipmentRepository = equipmentRepository;
             _computerEquipmentRepository = computerEquipmentRepository;
             _intentionManager = intentionManager;
         }
 
-        public async Task AssignEquipmentToComputerAsync(Equipment computer,
-            Guid equipmentId, DateTimeOffset assignDate, CancellationToken cancellationToken)
+        public async Task AssignEquipmentToComputerAsync(
+            Guid computerId, Guid equipmentId, DateTimeOffset assignDate, 
+            CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Assign, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Assign,
                 cancellationToken);
+
+            var computer = await _equipmentRepository.GetEquipmentByIdAsync(computerId, cancellationToken);
+
+            if (computer == null)
+            {
+                throw new EquipmentIsGoneException(computerId);
+            }
 
             if (computer.Id == equipmentId)
             {
                 throw new AssignComputerToItselfException(computer.Id);
             }
 
-            if(await _computerEquipmentRepository.IsEquipmentComputerAsync(computer.Id, cancellationToken) == false)
+            if (await _computerEquipmentRepository.IsEquipmentComputerAsync(computer.Id, cancellationToken) == false)
             {
                 throw new AssignEquipmentNotToComputerException(computer.Id);
             }
@@ -44,21 +55,29 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
 
             var computerEquipment = computer.AssignEquipmentToComputer(equipmentId, assignDate);
 
-            _computerEquipmentRepository.Insert(computerEquipment);
+            await _computerEquipmentRepository.InsertAsync(computerEquipment, cancellationToken);
         }
 
-        public async Task UnassignEquipmentFromComputerAsync(Equipment computer, Guid equipmentId,
-            DateTimeOffset unassignDate, CancellationToken cancellationToken)
+        public async Task UnassignEquipmentFromComputerAsync(
+            Guid computerId, Guid equipmentId,DateTimeOffset unassignDate, 
+            CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Unassign, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageComputerEquipmentIntention.Unassign,
                 cancellationToken);
+
+            var computer = await _equipmentRepository.GetEquipmentByIdAsync(computerId, cancellationToken);
+
+            if (computer == null)
+            {
+                throw new EquipmentIsGoneException(computerId);
+            }
 
             var computerEquipment = computer.ComputerEquipments.SingleOrDefault(x =>
                 x.EquipmentId == equipmentId
                 && x.AssignedDate <= unassignDate
                 && x.UnassignedDate == null);
 
-            if(computerEquipment == null)
+            if (computerEquipment == null)
             {
                 throw new ComputerEquipmentNotFoundToUnassignException(computer.Id, equipmentId);
             }

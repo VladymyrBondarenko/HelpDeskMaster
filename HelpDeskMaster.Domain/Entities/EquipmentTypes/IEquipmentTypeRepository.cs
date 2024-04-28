@@ -2,10 +2,10 @@
 {
     public interface IEquipmentTypeRepository
     {
-        void Insert(EquipmentType equipmentType);
+        Task InsertAsync(EquipmentType equipmentType, CancellationToken cancellationToken);
 
-        Task<bool> UpdateAsync(EquipmentType equipmentType, CancellationToken cancellationToken);
+        void Update(EquipmentType equipmentType);
 
-        Task<bool> DeleteAsync(Guid equipmentTypeId, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid equipmentTypeId, CancellationToken cancellationToken);
     }
 }

@@ -22,9 +22,9 @@ namespace HelpDeskMaster.Domain.Entities.Users
 
         public IReadOnlyList<UserEquipment> Equipments => _equipments.ToList();
 
-        public static User Create(Login login, string? phoneNumber)
+        public static User Create(Guid id, Login login, string? phoneNumber)
         {
-            return new User(Guid.NewGuid(), login, phoneNumber, DateTimeOffset.UtcNow);
+            return new User(id, login, phoneNumber, DateTimeOffset.UtcNow);
         }
 
         public void UpdatePhoneNumber(string? phoneNumber)

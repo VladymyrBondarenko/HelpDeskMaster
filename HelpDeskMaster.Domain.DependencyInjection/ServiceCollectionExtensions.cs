@@ -1,4 +1,8 @@
 ﻿using HelpDeskMaster.Domain.Authorization;
+using HelpDeskMaster.Domain.Entities.Equipments;
+using HelpDeskMaster.Domain.Entities.Equipments.Intentions;
+using HelpDeskMaster.Domain.Entities.EquipmentTypes;
+using HelpDeskMaster.Domain.Entities.EquipmentTypes.Intentions;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.Users.Intentions;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
@@ -16,11 +20,19 @@ namespace HelpDeskMaster.Domain.DependencyInjection
             services
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IWorkCategoryService, WorkCategoryService>()
-                .AddScoped<IWorkDirectionService, WorkDirectionService>();
+                .AddScoped<IWorkDirectionService, WorkDirectionService>()
+                .AddScoped<IEquipmentTypeService, EquipmentTypeService>()
+                .AddScoped<IEquipmentService, EquipmentService>()
+                .AddScoped<IComputerEquipmentService, ComputerEquipmentService>()
+                .AddScoped<IUserEquipmentService, UserEquipmentService>();
 
             services.AddScoped<IIntentionResolver, ManageWorkCategoryIntentionResolver>()
                 .AddScoped<IIntentionResolver, ManageWorkDirectionIntentionResolver>()
                 .AddScoped<IIntentionResolver, ManageUserIntentionResolver>()
+                .AddScoped<IIntentionResolver, ManageEquipmentTypeIntentionResolver>()
+                .AddScoped<IIntentionResolver, ManageEquipmentIntentionResolver>()
+                .AddScoped<IIntentionResolver, ManageComputerEquipmentIntentionResolver>()
+                .AddScoped<IIntentionResolver, ManageEquipmentOwnerIntentionResolver>()
                 .AddScoped<IIntentionManager, IntentionManager>();
 
             return services;

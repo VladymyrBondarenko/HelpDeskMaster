@@ -17,6 +17,11 @@ namespace HelpDeskMaster.Persistence.Data.Repositories.User
             return await _dbContext.Users.FirstOrDefaultAsync(x => x.Login.Value == login, cancellationToken);
         }
 
+        public async Task<Domain.Entities.Users.User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Users.FindAsync(id, cancellationToken);
+        }
+
         public async Task InsertAsync(Domain.Entities.Users.User user, CancellationToken cancellationToken)
         {
             await _dbContext.Users.AddAsync(user, cancellationToken);

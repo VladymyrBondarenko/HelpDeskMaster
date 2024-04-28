@@ -4,8 +4,8 @@
     {
         Task<bool> IsEquipmentAssignedAsync(Guid equipmentId, DateTimeOffset assignDate, CancellationToken cancellationToken);
 
-        Task<bool> IsEquipmentAssignedToUserAsync(Guid equipmentId, Guid userId, CancellationToken cancellationToken);
+        Task<bool> IsEquipmentAssignedToUserAsync(Guid equipmentId, Guid userId, DateTimeOffset date, CancellationToken cancellationToken);
 
-        void Insert(UserEquipment userEquipment);
+        Task InsertAsync(UserEquipment userEquipment, CancellationToken cancellationToken);
     }
 }

@@ -253,7 +253,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
                 .ReturnsAsync(false);
             _userEquipmentRepositoryMock
-                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
+                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, createdAt, CancellationToken.None))
                 .ReturnsAsync(true);
 
             await _sut.Invoking(x => x.AddEquipmentToRequestAsync(workRequest, equipmentId, CancellationToken.None))
@@ -286,7 +286,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
                 .ReturnsAsync(true);
             _userEquipmentRepositoryMock
-                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
+                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, createdAt, CancellationToken.None))
                 .ReturnsAsync(false);
 
             await _sut.Invoking(x => x.AddEquipmentToRequestAsync(workRequest, equipmentId, CancellationToken.None))
@@ -319,7 +319,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Add, workRequest, CancellationToken.None))
                 .ReturnsAsync(true);
             _userEquipmentRepositoryMock
-                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
+                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, createdAt, CancellationToken.None))
                 .ReturnsAsync(true);
 
             var addedEquipment = await _sut.AddEquipmentToRequestAsync(workRequest, equipmentId, CancellationToken.None);
@@ -423,7 +423,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
                 .ReturnsAsync(true);
             _userEquipmentRepositoryMock
-                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
+                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, createdAt, CancellationToken.None))
                 .ReturnsAsync(false);
 
             await _sut.Invoking(x => x.RemoveEquipmentFromRequestAsync(workRequest,
@@ -458,7 +458,7 @@ namespace HelpDeskMaster.Domain.UnitTests.WorkRequests
                 .Setup(x => x.IsAllowedAsync(ManageRequestEquipmentIntention.Remove, workRequest, CancellationToken.None))
                 .ReturnsAsync(true);
             _userEquipmentRepositoryMock
-                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, CancellationToken.None))
+                .Setup(x => x.IsEquipmentAssignedToUserAsync(equipmentId, authorId, createdAt, CancellationToken.None))
                 .ReturnsAsync(true);
 
             await _sut.RemoveEquipmentFromRequestAsync(workRequest, workRequestEquipment.Id, CancellationToken.None);

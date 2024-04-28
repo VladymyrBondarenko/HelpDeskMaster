@@ -1,4 +1,6 @@
-﻿using HelpDeskMaster.Domain.Entities.Users;
+﻿using HelpDeskMaster.Domain.Entities.Equipments;
+using HelpDeskMaster.Domain.Entities.EquipmentTypes;
+using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,14 @@ namespace HelpDeskMaster.Persistence.Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<UserEquipment> UserEquipments { get; set; }
+
+        public DbSet<Equipment> Equipments { get; set; }
+
+        public DbSet<EquipmentType> EquipmentTypes { get; set; }
+
+        public DbSet<ComputerEquipment> ComputerEquipments { get; set; }
+
+        public DbSet<EquipmentComputerInfo> EquipmentComputerInfos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

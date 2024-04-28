@@ -4,23 +4,35 @@ using HelpDeskMaster.Domain.Exceptions.UserExceptions;
 
 namespace HelpDeskMaster.Domain.Entities.Users
 {
-    internal class UserEquipmentService
+    internal class UserEquipmentService : IUserEquipmentService
     {
+        private readonly IUserRepository _userRepository;
         private readonly IUserEquipmentRepository _userEquipmentRepository;
         private readonly IIntentionManager _intentionManager;
 
-        public UserEquipmentService(IUserEquipmentRepository userEquipmentRepository,
+        public UserEquipmentService(
+            IUserRepository userRepository,
+            IUserEquipmentRepository userEquipmentRepository,
             IIntentionManager intentionManager)
         {
+            _userRepository = userRepository;
             _userEquipmentRepository = userEquipmentRepository;
             _intentionManager = intentionManager;
         }
 
-        public async Task AssignEquipmentToUserAsync(User user, Guid equipmentId, DateTimeOffset assignDate, 
+        public async Task AssignEquipmentToUserAsync(
+            Guid userId, Guid equipmentId, DateTimeOffset assignDate,
             CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Assign, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Assign,
                 cancellationToken);
+
+            var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
+
+            if (user == null)
+            {
+                throw new UserIsGoneException(userId);
+            }
 
             if (await _userEquipmentRepository.IsEquipmentAssignedAsync(equipmentId, assignDate, cancellationToken))
             {
@@ -29,21 +41,29 @@ namespace HelpDeskMaster.Domain.Entities.Users
 
             var userEquipment = user.AssignEquipment(equipmentId, assignDate);
 
-            _userEquipmentRepository.Insert(userEquipment);
+            await _userEquipmentRepository.InsertAsync(userEquipment, cancellationToken);
         }
 
-        public async Task UnassignEquipmentFromUserAsync(User user, Guid equipmentId, DateTimeOffset unassignDate,
+        public async Task UnassignEquipmentFromUserAsync(
+            Guid userId, Guid equipmentId, DateTimeOffset unassignDate,
             CancellationToken cancellationToken)
         {
-            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Unassign, 
+            await _intentionManager.ThrowIfForbiddenAsync(ManageEquipmentOwnerIntention.Unassign,
                 cancellationToken);
+
+            var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
+
+            if (user == null)
+            {
+                throw new UserIsGoneException(userId);
+            }
 
             var userEquipment = user.Equipments.SingleOrDefault(x =>
                 x.EquipmentId == equipmentId
                 && x.AssignedDate <= unassignDate
                 && x.UnassignedDate == null);
 
-            if(userEquipment == null)
+            if (userEquipment == null)
             {
                 throw new UserEquipmentNotFoundToUnassignException(user.Id, equipmentId);
             }

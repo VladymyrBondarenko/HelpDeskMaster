@@ -6,5 +6,10 @@
             : base(DomainErrorCode.Gone, $"User with login {login} was not found")
         {
         }
+
+        public UserIsGoneException(Guid id)
+            : base(DomainErrorCode.Gone, $"User with id {id} was not found")
+        {
+        }
     }
 }

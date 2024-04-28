@@ -76,7 +76,7 @@ namespace HelpDeskMaster.Infrastracture.Authentication
             }
             else
             {
-                var newUser = User.Create(new Login(email), phoneNumber);
+                var newUser = User.Create(Guid.NewGuid(), new Login(email), phoneNumber);
                 await _userRepository.InsertAsync(newUser, cancellationToken);
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);

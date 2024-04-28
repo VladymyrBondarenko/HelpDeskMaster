@@ -22,6 +22,142 @@ namespace HelpDeskMaster.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.EquipmentTypes.EquipmentType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(75)
+                        .HasColumnType("character varying(75)");
+
+                    b.Property<int>("TypeOfEquipment")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EquipmentTypes");
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.ComputerEquipment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("AssignedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ComputerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EquipmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("UnassignedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComputerId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.ToTable("ComputerEquipments");
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.Equipment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CommissioningDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EquipmentTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FactoryNumber")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EquipmentTypeId");
+
+                    b.ToTable("Equipments");
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.EquipmentComputerInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("ComputerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("InvoiceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NameInNet")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("WarrantyCardDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("WarrantyMonths")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComputerId")
+                        .IsUnique();
+
+                    b.ToTable("EquipmentComputerInfos");
+                });
+
             modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -117,6 +253,43 @@ namespace HelpDeskMaster.Persistence.Migrations
                     b.ToTable("WorkDirections");
                 });
 
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.ComputerEquipment", b =>
+                {
+                    b.HasOne("HelpDeskMaster.Domain.Entities.Equipments.Equipment", null)
+                        .WithMany("ComputerEquipments")
+                        .HasForeignKey("ComputerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HelpDeskMaster.Domain.Entities.Equipments.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipment");
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.Equipment", b =>
+                {
+                    b.HasOne("HelpDeskMaster.Domain.Entities.EquipmentTypes.EquipmentType", "EquipmentType")
+                        .WithMany()
+                        .HasForeignKey("EquipmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EquipmentType");
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.EquipmentComputerInfo", b =>
+                {
+                    b.HasOne("HelpDeskMaster.Domain.Entities.Equipments.Equipment", null)
+                        .WithOne("EquipmentComputerInfo")
+                        .HasForeignKey("HelpDeskMaster.Domain.Entities.Equipments.EquipmentComputerInfo", "ComputerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Users.User", b =>
                 {
                     b.OwnsOne("HelpDeskMaster.Domain.Entities.Users.Login", "Login", b1 =>
@@ -151,6 +324,13 @@ namespace HelpDeskMaster.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Equipments.Equipment", b =>
+                {
+                    b.Navigation("ComputerEquipments");
+
+                    b.Navigation("EquipmentComputerInfo");
                 });
 
             modelBuilder.Entity("HelpDeskMaster.Domain.Entities.Users.User", b =>
