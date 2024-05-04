@@ -1,7 +1,7 @@
 ﻿namespace HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses
 {
-    public class GetAllWorkDirectionsResponse
+    public record GetAllWorkDirectionsResponse(
+        IReadOnlyList<WorkDirectionModel> WorkDirections)
     {
-        public required IReadOnlyList<WorkDirectionModel> WorkDirections { get; set; }
     }
 }

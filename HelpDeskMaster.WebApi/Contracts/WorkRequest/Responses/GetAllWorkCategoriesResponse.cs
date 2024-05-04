@@ -1,7 +1,7 @@
 ﻿namespace HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses
 {
-    public class GetAllWorkCategoriesResponse
+    public record GetAllWorkCategoriesResponse(
+        IReadOnlyList<WorkCategoryModel> WorkCategories)
     {
-        public required IReadOnlyList<WorkCategoryModel> WorkCategories { get; set; }
     }
 }

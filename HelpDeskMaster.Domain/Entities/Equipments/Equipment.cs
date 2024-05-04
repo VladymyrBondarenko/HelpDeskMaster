@@ -6,7 +6,7 @@ namespace HelpDeskMaster.Domain.Entities.Equipments
 {
     public class Equipment : Entity
     {
-        internal Equipment(Guid id, 
+        public Equipment(Guid id, 
             Guid equipmentTypeId, 
             string? model,
             DateTimeOffset commissioningDate, 

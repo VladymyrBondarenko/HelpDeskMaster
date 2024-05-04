@@ -31,17 +31,15 @@ namespace HelpDeskMaster.WebApi.Controllers
         {
             var equipmentTypes = await _sender.Send(new GetAllEquipmentTypesQuery());
 
-            var response = new GetAllEquipmentTypesResponse
-            {
-                EquipmentTypes = equipmentTypes.Select(x => new EquipmentTypeModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    TypeOfEquipment = x.TypeOfEquipment,
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt
-                }).ToList()
-            };
+            var response = new GetAllEquipmentTypesResponse(
+                equipmentTypes.Select(x => 
+                    new EquipmentTypeModel(
+                        x.Id, 
+                        x.Title, 
+                        x.TypeOfEquipment, 
+                        x.CreatedAt, 
+                        x.UpdatedAt)
+                    ).ToList());
 
             return Ok(new ResponseBody<GetAllEquipmentTypesResponse>(response));
         }
@@ -58,13 +56,11 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var equipmentType = await _sender.Send(cmd, cancellationToken);
 
-            var response = new CreateEquipmentTypeResponse
-            {
-                Id = equipmentType.Id,
-                Title = equipmentType.Title,
-                TypeOfEquipment = equipmentType.TypeOfEquipment,
-                CreatedAt = equipmentType.CreatedAt
-            };
+            var response = new CreateEquipmentTypeResponse(
+                equipmentType.Id,
+                equipmentType.Title,
+                equipmentType.TypeOfEquipment,
+                equipmentType.CreatedAt);
 
             return CreatedAtAction(nameof(Create), new ResponseBody<CreateEquipmentTypeResponse>(response));
         }

@@ -35,12 +35,10 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var workDirection = await _sender.Send(cmd, cancellationToken);
 
-            var response = new CreateWorkDirectionResponse
-            {
-                Id = workDirection.Id,
-                Title = workDirection.Title,
-                CreatedAt = workDirection.CreatedAt
-            };
+            var response = new CreateWorkDirectionResponse(
+                workDirection.Id,
+                workDirection.Title,
+                workDirection.CreatedAt);
 
             return CreatedAtAction(nameof(Create), new ResponseBody<CreateWorkDirectionResponse>(response));
         }
@@ -56,16 +54,13 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var workDirections = await _sender.Send(query, cancellationToken);
 
-            var response = new GetAllWorkDirectionsResponse
-            {
-                WorkDirections = workDirections.Select(x => new WorkDirectionModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt
-                }).ToList()
-            };
+            var response = new GetAllWorkDirectionsResponse(
+                workDirections.Select(x => new WorkDirectionModel(
+                    x.Id,
+                    x.Title,
+                    x.CreatedAt,
+                    x.UpdatedAt)
+                ).ToList());
 
             return Ok(new ResponseBody<GetAllWorkDirectionsResponse>(response));
         }

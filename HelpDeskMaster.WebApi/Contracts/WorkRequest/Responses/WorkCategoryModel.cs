@@ -1,13 +1,10 @@
 ﻿namespace HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses
 {
-    public class WorkCategoryModel
+    public record WorkCategoryModel(
+        Guid Id,
+        string Title,
+        DateTimeOffset CreatedAt,
+        DateTimeOffset? UpdatedAt)
     {
-        public Guid Id { get; set; }
-
-        public required string Title { get; set; }
-
-        public DateTimeOffset CreatedAt { get; set; }
-
-        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

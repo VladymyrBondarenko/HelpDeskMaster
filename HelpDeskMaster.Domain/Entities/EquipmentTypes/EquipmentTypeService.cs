@@ -23,8 +23,8 @@ namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
 
             var equipmentType = new EquipmentType(Guid.NewGuid(),
                 title,
-                DateTimeOffset.UtcNow,
-                typeOfEquipment);
+                typeOfEquipment,
+                DateTimeOffset.UtcNow);
 
             await _equipmentTypeRepository.InsertAsync(equipmentType, cancellationToken);
 

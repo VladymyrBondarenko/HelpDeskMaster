@@ -31,14 +31,12 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var user = await _sender.Send(query, cancellationToken);
 
-            var response = new GetUserByLoginResponse 
-            { 
-                Id = user.Id,
-                Login = user.Login.Value,
-                PhoneNumber = user.PhoneNumber,
-                CreatedAt = user.CreatedAt,
-                UpdatedAt = user.UpdatedAt
-            };
+            var response = new GetUserByLoginResponse(
+                user.Id, 
+                user.Login.Value, 
+                user.PhoneNumber, 
+                user.CreatedAt, 
+                user.UpdatedAt);
 
             return Ok(new ResponseBody<GetUserByLoginResponse>(response));
         }

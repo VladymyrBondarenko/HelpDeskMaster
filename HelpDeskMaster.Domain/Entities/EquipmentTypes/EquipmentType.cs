@@ -5,8 +5,8 @@ namespace HelpDeskMaster.Domain.Entities.EquipmentTypes
 {
     public class EquipmentType : Entity
     {
-        internal EquipmentType(Guid id, string title, DateTimeOffset createdAt,
-            TypeOfEquipment typeOfEquipment) : base(id, createdAt)
+        public EquipmentType(Guid id, string title, TypeOfEquipment typeOfEquipment,
+            DateTimeOffset createdAt) : base(id, createdAt)
         {
             Title = Guard.Against.NullOrWhiteSpace(title);
             TypeOfEquipment = Guard.Against.Null(typeOfEquipment);

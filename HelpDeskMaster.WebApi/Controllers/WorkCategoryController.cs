@@ -35,12 +35,10 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var workCategory = await _sender.Send(cmd, cancellationToken);
 
-            var response = new CreateWorkCategoryResponse
-            {
-                Id = workCategory.Id,
-                Title = workCategory.Title,
-                CreatedAt = workCategory.CreatedAt
-            };
+            var response = new CreateWorkCategoryResponse(
+                workCategory.Id,
+                workCategory.Title,
+                workCategory.CreatedAt);
 
             return CreatedAtAction(nameof(Create), new ResponseBody<CreateWorkCategoryResponse>(response));
         }
@@ -56,16 +54,14 @@ namespace HelpDeskMaster.WebApi.Controllers
 
             var workCategories = await _sender.Send(query, cancellationToken);
 
-            var response = new GetAllWorkCategoriesResponse
-            {
-                WorkCategories = workCategories.Select(x => new WorkCategoryModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt
-                }).ToList()
-            };
+            var response = new GetAllWorkCategoriesResponse(
+                workCategories.Select(x => 
+                    new WorkCategoryModel(
+                        x.Id, 
+                        x.Title, 
+                        x.CreatedAt, 
+                        x.UpdatedAt)
+                ).ToList());
 
             return Ok(new ResponseBody<GetAllWorkCategoriesResponse>(response));
         }

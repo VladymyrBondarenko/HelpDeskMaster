@@ -1,7 +1,7 @@
 ﻿namespace HelpDeskMaster.WebApi.Contracts.Equipment.Responses
 {
-    public class GetAllEquipmentTypesResponse
+    public record GetAllEquipmentTypesResponse(
+        IReadOnlyList<EquipmentTypeModel> EquipmentTypes)
     {
-        public required IReadOnlyList<EquipmentTypeModel> EquipmentTypes { get; set; }
     }
 }
