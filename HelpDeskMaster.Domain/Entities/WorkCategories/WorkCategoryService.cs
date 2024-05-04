@@ -21,7 +21,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkCategories
             await _intentionManager.ThrowIfForbiddenAsync(ManageWorkCategoryIntention.Create, 
                 cancellationToken);
 
-            var workCategory = new WorkCategory(Guid.NewGuid(), DateTimeOffset.UtcNow, title);
+            var workCategory = new WorkCategory(Guid.NewGuid(), title, DateTimeOffset.UtcNow);
 
             await _workCategoryRepository.InsertAsync(workCategory, cancellationToken);
 

@@ -1,7 +1,11 @@
 ﻿using FluentAssertions;
+using HelpDeskMaster.Domain.Entities.WorkCategories;
+using HelpDeskMaster.Persistence.Data;
 using HelpDeskMaster.WebApi.Contracts;
 using HelpDeskMaster.WebApi.Contracts.WorkRequest.Requests;
 using HelpDeskMaster.WebApi.Contracts.WorkRequest.Responses;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using Xunit;
 
@@ -9,8 +13,11 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
     public class WorkCategoryEndpointTests : HdmEndpointTestBase
     {
+        private readonly HdmServerApplicationFactory _factory;
+
         public WorkCategoryEndpointTests(HdmServerApplicationFactory factory) : base(factory)
         {
+            _factory = factory;
         }
 
         [Fact]
@@ -48,16 +55,15 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                 .Title.Should().Be(request.Title);
             reponseBody!.Data.Id.Should().NotBeEmpty();
 
-            using var getResponse = await HttpClient.GetAsync("api/workCategories");
-            getResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
+            await using var scope = _factory.Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var categoriesData = await getResponse.Content.ReadFromJsonAsync<ResponseBody<GetAllWorkCategoriesResponse>>();
+            var workCategoryInDb = await db.WorkCategories
+                .SingleOrDefaultAsync(x => x.Id == reponseBody.Data.Id);
 
-            categoriesData.Should().NotBeNull()
-                    .And.Subject.As<ResponseBody<GetAllWorkCategoriesResponse>>()
-                .Data.Should().NotBeNull()
-                    .And.Subject.As<GetAllWorkCategoriesResponse>()
-                .WorkCategories.Should().OnlyContain(x => x.Title == request.Title);
+            workCategoryInDb.Should().NotBeNull()
+                    .And.Subject.As<WorkCategory>()
+                .Title.Should().Be(request.Title);
         }
 
         [Fact]
@@ -65,28 +71,26 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
         {
             await AuthenticateAsync();
 
-            var request = new CreateWorkCategoryRequest("Category");
+            await using var scope = _factory.Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            using var createResponse = await HttpClient.PostAsJsonAsync("api/workCategories",
-                request, CancellationToken.None);
-            createResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
+            var date = new DateTimeOffset(
+                2024, 4, 28,
+                12, 34, 5,
+                new TimeSpan());
 
-            var createReponseBody = await createResponse.Content.ReadFromJsonAsync<ResponseBody<CreateWorkCategoryResponse>>();
-            createReponseBody!.Data.Id.Should().NotBeEmpty();
+            var catetory = new WorkCategory(
+                new Guid("a95ba4e8-be61-4bd9-8980-530a8df53c0b"), 
+                "Work Category 1", 
+                date);
+            await db.WorkCategories.AddAsync(catetory);
+            await db.SaveChangesAsync();
 
-            using var deleteResponse = await HttpClient.DeleteAsync($"api/workCategories/{createReponseBody!.Data.Id}");
+            using var deleteResponse = await HttpClient.DeleteAsync($"api/workCategories/{catetory.Id}");
             deleteResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
-            using var getResponse = await HttpClient.GetAsync("api/workCategories");
-            getResponse.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
-
-            var categoriesData = await getResponse.Content.ReadFromJsonAsync<ResponseBody<GetAllWorkCategoriesResponse>>();
-
-            categoriesData.Should().NotBeNull()
-                    .And.Subject.As<ResponseBody<GetAllWorkCategoriesResponse>>()
-                .Data.Should().NotBeNull()
-                    .And.Subject.As<GetAllWorkCategoriesResponse>()
-                .WorkCategories.Should().BeEmpty();
+            (await db.WorkCategories.AnyAsync(x => x.Id == catetory.Id))
+                .Should().BeFalse();
         }
     }
 }

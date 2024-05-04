@@ -5,8 +5,10 @@ namespace HelpDeskMaster.Domain.Entities.WorkCategories
 {
     public class WorkCategory : Entity
     {
-        internal WorkCategory(Guid id, DateTimeOffset createdAt,
-            string title) : base(id, createdAt)
+        public WorkCategory(
+            Guid id, 
+            string title, 
+            DateTimeOffset createdAt) : base(id, createdAt)
         {
             Title = Guard.Against.NullOrWhiteSpace(title);
         }

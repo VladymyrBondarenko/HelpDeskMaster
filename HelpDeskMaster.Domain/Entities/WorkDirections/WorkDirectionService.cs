@@ -22,7 +22,7 @@ namespace HelpDeskMaster.Domain.Entities.WorkDirections
                 cancellationToken);
 
             var workDirection = new WorkDirection(
-                Guid.NewGuid(), DateTimeOffset.UtcNow, title);
+                Guid.NewGuid(), title, DateTimeOffset.UtcNow);
 
             await _workDirectionRepository.InsertAsync(workDirection, cancellationToken);
 

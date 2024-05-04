@@ -5,8 +5,10 @@ namespace HelpDeskMaster.Domain.Entities.WorkDirections
 {
     public class WorkDirection : Entity
     {
-        internal WorkDirection(Guid id, DateTimeOffset createdAt,
-            string title) : base(id, createdAt)
+        public WorkDirection(
+            Guid id, 
+            string title, 
+            DateTimeOffset createdAt) : base(id, createdAt)
         {
             Title = Guard.Against.NullOrWhiteSpace(title);
         }
