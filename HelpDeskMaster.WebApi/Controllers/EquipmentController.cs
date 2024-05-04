@@ -124,6 +124,10 @@ namespace HelpDeskMaster.WebApi.Controllers
         }
 
         [HttpPost("createComputer")]
+        [ProducesResponseType(201, Type = typeof(CreateComputerResponse))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> CreateComputer([FromBody] CreateComputerRequest request,
             CancellationToken cancellationToken)
         {
@@ -158,6 +162,10 @@ namespace HelpDeskMaster.WebApi.Controllers
         }
 
         [HttpPost("assignToComputer")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> AssignEquipmentToComputer([FromBody] AssignEquipmentToComputerRequest request,
             CancellationToken cancellationToken)
         {
