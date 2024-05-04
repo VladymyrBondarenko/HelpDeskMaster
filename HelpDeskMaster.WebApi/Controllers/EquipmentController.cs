@@ -1,4 +1,5 @@
-﻿using HelpDeskMaster.App.UseCases.Equipment.Equipments.CreateComputer;
+﻿using HelpDeskMaster.App.UseCases.Equipment.Equipments.AssignEquipmentToComputer;
+using HelpDeskMaster.App.UseCases.Equipment.Equipments.CreateComputer;
 using HelpDeskMaster.App.UseCases.Equipment.Equipments.CreateEquipment;
 using HelpDeskMaster.App.UseCases.Equipment.Equipments.GetEquipmentById;
 using HelpDeskMaster.Domain.Entities.EquipmentTypes;
@@ -154,6 +155,20 @@ namespace HelpDeskMaster.WebApi.Controllers
                 createdComputer.CreatedAt);
 
             return CreatedAtAction(nameof(CreateComputer), new ResponseBody<CreateComputerResponse>(response));
+        }
+
+        [HttpPost("assignToComputer")]
+        public async Task<IActionResult> AssignEquipmentToComputer([FromBody] AssignEquipmentToComputerRequest request,
+            CancellationToken cancellationToken)
+        {
+            var cmd = new AssignEquipmentToComputerCommand(
+                request.ComputerId, 
+                request.EquipmentId, 
+                request.AssignDate);
+
+            await _sender.Send(cmd, cancellationToken);
+
+            return Created();
         }
     }
 }
