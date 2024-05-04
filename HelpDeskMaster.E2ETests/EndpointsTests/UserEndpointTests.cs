@@ -3,11 +3,13 @@ using HelpDeskMaster.Domain.Entities.Equipments;
 using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Persistence.Data;
+using HelpDeskMaster.WebApi.Contracts;
 using HelpDeskMaster.WebApi.Contracts.User.Request;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using Xunit;
+using HelpDeskMaster.WebApi.Contracts.User.Responses;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
@@ -18,6 +20,36 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
         public UserEndpointTests(HdmServerApplicationFactory factory) : base(factory)
         {
             _factory = factory;
+        }
+
+        [Fact]
+        public async Task ShouldGetUserByLogin()
+        {
+            await AuthenticateAsync();
+
+            await using var scope = _factory.Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var user = User.Create(
+                new Guid("3e32f7c7-e968-4ab2-b73d-360837cd5423"),
+                new Login("d5889cfb-28a0-464a-8460-6f0f8ec01556@gmail.com"),
+                "3ec10ece-3f77-4070-acba-d0902efda851");
+            await db.Users.AddAsync(user);
+            await db.SaveChangesAsync();
+
+            using var response = await HttpClient.GetAsync($"api/users/{user.Login.Value}");
+            response.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
+
+            var reponseBody = await response.Content.ReadFromJsonAsync<ResponseBody<GetUserByLoginResponse>>();
+
+            reponseBody.Should().NotBeNull()
+                    .And.Subject.As<ResponseBody<GetUserByLoginResponse>>()
+                .Data.Should().NotBeNull()
+                    .And.Subject.As<GetUserByLoginResponse>();
+
+            reponseBody!.Data!.Id.Should().Be(user.Id);
+            reponseBody!.Data!.Login.Should().Be(user.Login.Value);
+            reponseBody!.Data!.PhoneNumber.Should().Be(user.PhoneNumber);
         }
 
         [Fact]
@@ -32,7 +64,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             var user = User.Create(
                 new Guid("ab11129a-7265-471f-b2c1-8f8c0f3bbd84"),
                 new Login("44c22d86-e461-4c0c-a08f-5e5dc493c5bc@gmail.com"),
-                "+380919232134");
+                "4bcd9ad8-ea56-4575-9804-88c7780e7d03");
             await db.Users.AddAsync(user);
 
             var date = new DateTimeOffset(
