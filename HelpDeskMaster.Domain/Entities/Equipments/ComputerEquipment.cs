@@ -3,7 +3,7 @@ using HelpDeskMaster.Domain.Abstractions;
 
 namespace HelpDeskMaster.Domain.Entities.Equipments
 {
-    public class ComputerEquipment : Entity
+    public class ComputerEquipment : AggregateRoot
     {
         private ComputerEquipment() { }
 

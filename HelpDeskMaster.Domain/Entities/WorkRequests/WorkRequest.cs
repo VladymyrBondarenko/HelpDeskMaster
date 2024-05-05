@@ -4,7 +4,7 @@ using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges;
 
 namespace HelpDeskMaster.Domain.Entities.WorkRequests
 {
-    public class WorkRequest : Entity
+    public class WorkRequest : AggregateRoot
     {
         private WorkRequest(Guid id, DateTimeOffset createdAt,
             Guid authorId,

@@ -7,6 +7,7 @@
         void Update(Equipment equipment);
 
         Task DeleteAsync(Guid equipmentId, CancellationToken cancellationToken);
+
         Task<Equipment?> GetEquipmentByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 }

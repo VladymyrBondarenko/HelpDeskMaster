@@ -3,7 +3,7 @@ using Ardalis.GuardClauses;
 
 namespace HelpDeskMaster.Domain.Entities.Users
 {
-    public class User : Entity
+    public class User : AggregateRoot
     {
         private User() { }
 

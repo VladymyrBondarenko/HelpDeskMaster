@@ -4,7 +4,7 @@ using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 
 namespace HelpDeskMaster.Domain.Entities.Equipments
 {
-    public class Equipment : Entity
+    public class Equipment : AggregateRoot
     {
         public Equipment(Guid id, 
             Guid equipmentTypeId, 
