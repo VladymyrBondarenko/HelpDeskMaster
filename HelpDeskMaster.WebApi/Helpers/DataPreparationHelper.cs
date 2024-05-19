@@ -1,4 +1,5 @@
-﻿using HelpDeskMaster.Persistence.Data;
+﻿using HelpDeskMaster.App.DataMocking;
+using HelpDeskMaster.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskMaster.WebApi.Helpers
@@ -12,17 +13,21 @@ namespace HelpDeskMaster.WebApi.Helpers
             var dbContext = seviceScope.ServiceProvider.GetService<ApplicationDbContext>();
             if (dbContext != null)
             {
-                SeedData(dbContext);
+                ApplyMigrations(dbContext);
+
+                if (app.Configuration.GetValue<bool>("StartOptions:GenerateTestData"))
+                {
+                    var mockService = seviceScope.ServiceProvider.GetService<IHdmDataMockService>();
+                    mockService?.MockData().GetAwaiter().GetResult();
+                }
             }
         }
 
-        private static void SeedData(ApplicationDbContext dbContext)
+        private static void ApplyMigrations(ApplicationDbContext dbContext)
         {
             Console.WriteLine("Applying migration");
 
             dbContext.Database.Migrate();
-
-            Console.WriteLine("Data already exist");
         }
     }
 }

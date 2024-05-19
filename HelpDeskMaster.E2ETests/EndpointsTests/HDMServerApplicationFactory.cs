@@ -25,7 +25,15 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                     ["Keycloak:auth-server-url"] = $"http://localhost:{keycloakPublicPort}/",
                     ["Keycloak:verify-token-issuer"] = "False",
                     ["Keycloak:verify-token-audience"] = "False",
-                    ["Keycloak:ssl-required"] = "none"
+                    ["Keycloak:ssl-required"] = "none",
+                    ["EmailSender:Server"] = "",
+                    ["EmailSender:Port"] = "0",
+                    ["EmailSender:SenderName"] = "",
+                    ["EmailSender:SenderEmail"] = "",
+                    ["EmailSender:UserName"] = "",
+                    ["EmailSender:Password"] = "",
+                    ["BackgroundJobs:Outbox:Schedule"] = "0/15 * * * * *",
+                    ["StartOptions:GenerateTestData"] = "false"
                 }).Build();
             builder.UseConfiguration(configuration);
 

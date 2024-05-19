@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HelpDeskMaster.App.Behaviours;
+using HelpDeskMaster.App.DataMocking;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HelpDeskMaster.App.DependencyInjection
@@ -16,6 +17,8 @@ namespace HelpDeskMaster.App.DependencyInjection
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
             services.AddValidatorsFromAssembly(targetAssembly, includeInternalTypes: true);
+
+            services.AddScoped<IHdmDataMockService, SimpleHdmDataMockService>();
 
             return services;
         }

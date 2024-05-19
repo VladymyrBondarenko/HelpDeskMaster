@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using Xunit;
 using HelpDeskMaster.WebApi.Contracts.User.Responses;
+using Newtonsoft.Json;
+using HelpDeskMaster.Domain.DomainEvents;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
@@ -114,6 +116,24 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             userEquipmentInDb.Should().NotBeNull();
             userEquipmentInDb!.EquipmentId.Should().Be(equipment.Id);
             userEquipmentInDb!.AssignedDate.Should().Be(assignDate);
+
+            // check for outbox message in db
+            var outboxMessageInDb = await db.OutboxMessages.SingleOrDefaultAsync();
+            outboxMessageInDb.Should().NotBeNull();
+            outboxMessageInDb!.ProcessedOnUtc.Should().BeNull();
+            outboxMessageInDb!.Content.Should().NotBeNullOrWhiteSpace();
+
+            var equipmentAssignedToUserDomainEvent = JsonConvert
+                .DeserializeObject<EquipmentAssignedToUserDomainEvent>(outboxMessageInDb!.Content);
+
+            equipmentAssignedToUserDomainEvent.Should().NotBeNull();
+            equipmentAssignedToUserDomainEvent!.EquipmentId.Should().Be(equipment.Id);
+            equipmentAssignedToUserDomainEvent!.UserId.Should().Be(user.Id);
+            equipmentAssignedToUserDomainEvent!.AssignedDate.Should().Be(assignDate);
+
+            //await Task.Delay(100_000);
+            //outboxMessageInDb = await db.OutboxMessages.SingleOrDefaultAsync();
+            //outboxMessageInDb!.ProcessedOnUtc.Should().NotBeNull();
         }
     }
 }

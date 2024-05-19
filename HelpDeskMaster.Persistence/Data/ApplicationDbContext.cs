@@ -3,6 +3,7 @@ using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
+using HelpDeskMaster.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskMaster.Persistence.Data
@@ -28,6 +29,8 @@ namespace HelpDeskMaster.Persistence.Data
         public DbSet<ComputerEquipment> ComputerEquipments { get; set; }
 
         public DbSet<EquipmentComputerInfo> EquipmentComputerInfos { get; set; }
+
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

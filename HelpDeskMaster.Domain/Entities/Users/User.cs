@@ -1,5 +1,6 @@
 ﻿using HelpDeskMaster.Domain.Abstractions;
 using Ardalis.GuardClauses;
+using HelpDeskMaster.Domain.DomainEvents;
 
 namespace HelpDeskMaster.Domain.Entities.Users
 {
@@ -45,6 +46,8 @@ namespace HelpDeskMaster.Domain.Entities.Users
                 Id, equipmentId, assignDate);
 
             _equipments.Add(userEquipment);
+
+            RaiseDomainEvent(new EquipmentAssignedToUserDomainEvent(Id, equipmentId, assignDate));
 
             return userEquipment;
         }

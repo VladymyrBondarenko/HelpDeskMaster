@@ -5,6 +5,8 @@ using HelpDeskMaster.WebApi.Helpers;
 using HelpDeskMaster.WebApi.Middleware;
 using HelpDeskMaster.Infrastracture.DependencyInjection;
 using HelpDeskMaster.WebApi.Installers;
+using Hangfire;
+using HelpDeskMaster.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     app.PrepareDataPopulation();
+
+    app.UseHangfireDashboard(options: new DashboardOptions
+    {
+        Authorization = [],
+        DarkModeEnabled = false
+    });
 }
 
 app.UseHttpsRedirection();
@@ -36,6 +44,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.UseBackgroundJob();
 
 app.MapControllers();
 

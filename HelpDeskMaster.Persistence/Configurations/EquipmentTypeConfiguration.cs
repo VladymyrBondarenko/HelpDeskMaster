@@ -11,7 +11,7 @@ namespace HelpDeskMaster.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.CreatedAt).IsRequired();
-            builder.Property(x => x.TypeOfEquipment);
+            builder.Property(x => x.TypeOfEquipment).IsRequired();
 
             builder.Property(x => x.Title)
                 .IsRequired()

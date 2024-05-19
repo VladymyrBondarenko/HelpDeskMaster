@@ -1,4 +1,5 @@
-﻿using HelpDeskMaster.Domain.Entities.Users;
+﻿using HelpDeskMaster.Domain.Entities.Equipments;
+using HelpDeskMaster.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

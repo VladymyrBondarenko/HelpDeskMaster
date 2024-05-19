@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,6 +24,7 @@
     <ProjectReference Include="..\HelpDeskMaster.App.DependencyInjection\HelpDeskMaster.App.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Domain.DependencyInjection\HelpDeskMaster.Domain.DependencyInjection.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Infrastracture.DependencyInjection\HelpDeskMaster.Infrastracture.DependencyInjection.csproj" />
+    <ProjectReference Include="..\HelpDeskMaster.Infrastracture\HelpDeskMaster.Infrastracture.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Persistence.DependencyInjection\HelpDeskMaster.Persistence.DependencyInjection.csproj" />
   </ItemGroup>
 

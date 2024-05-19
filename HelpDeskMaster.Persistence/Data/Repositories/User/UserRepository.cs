@@ -14,12 +14,18 @@ namespace HelpDeskMaster.Persistence.Data.Repositories.User
 
         public async Task<Domain.Entities.Users.User?> GetAsync(string login, CancellationToken cancellationToken)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Login.Value == login, cancellationToken);
+            return await _dbContext.Users
+                .Include(x => x.Equipments)
+                    .ThenInclude(x => x.Equipment)
+                .FirstOrDefaultAsync(x => x.Login.Value == login, cancellationToken);
         }
 
         public async Task<Domain.Entities.Users.User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Users.FindAsync(id, cancellationToken);
+            return await _dbContext.Users
+                .Include(x => x.Equipments)
+                    .ThenInclude(x => x.Equipment)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task InsertAsync(Domain.Entities.Users.User user, CancellationToken cancellationToken)

@@ -1,6 +1,10 @@
-﻿using HelpDeskMaster.Domain.Authentication;
+﻿using Hangfire;
+using Hangfire.PostgreSql;
+using HelpDeskMaster.Domain.Authentication;
 using HelpDeskMaster.Infrastracture.Authentication;
 using HelpDeskMaster.Infrastracture.Authentication.KeycloakAuth.Configuration;
+using HelpDeskMaster.Infrastracture.BackgroundJobs;
+using HelpDeskMaster.Infrastracture.Mailing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -14,13 +18,23 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
         public static IServiceCollection AddHelpDeskMasterInfrastracture(this IServiceCollection services,
             IConfiguration configuration)
         {
+            // Keycloak authentication configuring
             var authenticationOptions = configuration
                 .GetSection(KeycloakAuthenticationOptions.Section)
                 .Get<KeycloakAuthenticationOptions>()!;
             services.AddKeycloakAuthentication(authenticationOptions);
             services.AddSingleton(authenticationOptions);
-
             services.AddScoped<IIdentityProvider, IdentityProvider>();
+
+            // Email sending configuring
+            var emailSenderOptions = configuration
+                .GetSection(EmailSenderOptions.Section)
+                .Get<EmailSenderOptions>()!;
+            services.AddSingleton(emailSenderOptions);
+            services.AddScoped<IEmailService, EmailService>();
+
+            // Background jobs configuring
+            services.AddBackgroundJobs(configuration);
 
             return services;
         }
@@ -55,6 +69,19 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
                     opts.RequireHttpsMetadata = sslRequired;
                     opts.SaveToken = true;
                 });
+        }
+
+        private static void AddBackgroundJobs(
+            this IServiceCollection services, 
+            IConfiguration configuration)
+        {
+            services.AddHangfire(config => 
+                config.UsePostgreSqlStorage(options =>
+                    options.UseNpgsqlConnection(configuration.GetConnectionString("HdmDbConnection"))));
+
+            services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(1));
+
+            services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
         }
     }
 }

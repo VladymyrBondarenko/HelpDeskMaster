@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using HelpDeskMaster.Domain.Abstractions;
+using HelpDeskMaster.Domain.Entities.Equipments;
 
 namespace HelpDeskMaster.Domain.Entities.Users
 {
@@ -19,6 +20,8 @@ namespace HelpDeskMaster.Domain.Entities.Users
         public Guid UserId { get; private set; }
 
         public Guid EquipmentId { get; private set; }
+
+        public Equipment? Equipment { get; }
 
         public DateTimeOffset AssignedDate { get; private set; }
 

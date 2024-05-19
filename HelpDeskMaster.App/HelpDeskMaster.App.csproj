@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HelpDeskMaster.Domain\HelpDeskMaster.Domain.csproj" />
+    <ProjectReference Include="..\HelpDeskMaster.Infrastracture\HelpDeskMaster.Infrastracture.csproj" />
     <ProjectReference Include="..\HelpDeskMaster.Persistence\HelpDeskMaster.Persistence.csproj" />
   </ItemGroup>
 
