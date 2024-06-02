@@ -12,6 +12,8 @@ using Xunit;
 using HelpDeskMaster.WebApi.Contracts.User.Responses;
 using Newtonsoft.Json;
 using HelpDeskMaster.Domain.DomainEvents;
+using HelpDeskMaster.E2ETests.Probing;
+using HelpDeskMaster.E2ETests.BackgroundJobsTests.ProcessOutboxMessagesJob;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
@@ -109,7 +111,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             using var response = await HttpClient.PostAsJsonAsync($"api/users/assignEquipment", request);
             response.Invoking(x => x.EnsureSuccessStatusCode()).Should().NotThrow();
 
-            // check for user equipment in db
+            // assert user equipment in db
             var userEquipmentInDb = await db.UserEquipments
                 .SingleOrDefaultAsync(x => x.UserId == user.Id);
 
@@ -117,7 +119,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             userEquipmentInDb!.EquipmentId.Should().Be(equipment.Id);
             userEquipmentInDb!.AssignedDate.Should().Be(assignDate);
 
-            // check for outbox message in db
+            // assert outbox message in db
             var outboxMessageInDb = await db.OutboxMessages.SingleOrDefaultAsync();
             outboxMessageInDb.Should().NotBeNull();
             outboxMessageInDb!.ProcessedOnUtc.Should().BeNull();
@@ -131,9 +133,10 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
             equipmentAssignedToUserDomainEvent!.UserId.Should().Be(user.Id);
             equipmentAssignedToUserDomainEvent!.AssignedDate.Should().Be(assignDate);
 
-            //await Task.Delay(100_000);
-            //outboxMessageInDb = await db.OutboxMessages.SingleOrDefaultAsync();
-            //outboxMessageInDb!.ProcessedOnUtc.Should().NotBeNull();
+            // assert outbox message to be processed eventually
+            await PollerFacade.AssertEventually(
+                new GetProcessedOutboxMessagesProbe(db, outboxMessageInDb),
+                10_000);
         }
     }
 }

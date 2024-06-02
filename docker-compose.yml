@@ -40,6 +40,7 @@ services:
     EmailSender__UserName: ''
     EmailSender__Password: ''
     BackgroundJobs__Outbox__Schedule: '0/15 * * * * *'
+    BackgroundJobs__Outbox__BatchSize: "15"
     StartOptions__GenerateTestData: 'True'
    networks:
     - hdm-network

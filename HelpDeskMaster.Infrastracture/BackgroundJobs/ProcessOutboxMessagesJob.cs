@@ -12,20 +12,22 @@ namespace HelpDeskMaster.Infrastracture.BackgroundJobs
 {
     internal class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
     {
-        private const int BatchSize = 15;
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All
         };
+        private readonly BackgroundJobsOptions _backgroundJobsOptions;
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly ILogger<ProcessOutboxMessagesJob> _logger;
         private readonly IPublisher _publisher;
 
         public ProcessOutboxMessagesJob(
+            BackgroundJobsOptions backgroundJobsOptions,
             IDbConnectionFactory dbConnectionFactory,
             ILogger<ProcessOutboxMessagesJob> logger,
             IPublisher publisher)
         {
+            _backgroundJobsOptions = backgroundJobsOptions;
             _dbConnectionFactory = dbConnectionFactory;
             _logger = logger;
             _publisher = publisher;
@@ -95,7 +97,7 @@ namespace HelpDeskMaster.Infrastracture.BackgroundJobs
 
             var outboxMessages = await connection.QueryAsync<OutboxMessage>(
                 query,
-                new { BatchSize },
+                new { BatchSize = _backgroundJobsOptions?.Outbox?.BatchSize ?? 15 },
                 transaction
             );
 

@@ -82,6 +82,11 @@ namespace HelpDeskMaster.Infrastracture.DependencyInjection
             services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(1));
 
             services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
+
+            var backgroundJobsOptions = configuration
+                .GetSection(BackgroundJobsOptions.Section)
+                .Get<BackgroundJobsOptions>()!;
+            services.AddSingleton(backgroundJobsOptions);
         }
     }
 }

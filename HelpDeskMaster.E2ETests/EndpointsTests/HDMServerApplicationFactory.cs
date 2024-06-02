@@ -32,8 +32,9 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
                     ["EmailSender:SenderEmail"] = "",
                     ["EmailSender:UserName"] = "",
                     ["EmailSender:Password"] = "",
-                    ["BackgroundJobs:Outbox:Schedule"] = "0/15 * * * * *",
-                    ["StartOptions:GenerateTestData"] = "false"
+                    ["BackgroundJobs:Outbox:Schedule"] = "0/1 * * * * *",
+                    ["BackgroundJobs:Outbox:BatchSize"] = "15",
+                    ["StartOptions:GenerateTestData"] = "false",
                 }).Build();
             builder.UseConfiguration(configuration);
 
