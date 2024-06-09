@@ -17,6 +17,7 @@ using HelpDeskMaster.E2ETests.BackgroundJobsTests.ProcessOutboxMessagesJob;
 
 namespace HelpDeskMaster.E2ETests.EndpointsTests
 {
+    [Collection(nameof(ProbingTestsCollectionDefinition))]
     public class UserEndpointTests : HdmEndpointTestBase
     {
         private readonly HdmServerApplicationFactory _factory;

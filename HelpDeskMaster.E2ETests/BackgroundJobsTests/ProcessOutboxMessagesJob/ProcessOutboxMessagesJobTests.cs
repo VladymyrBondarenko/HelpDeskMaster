@@ -10,6 +10,7 @@ using Xunit;
 
 namespace HelpDeskMaster.E2ETests.BackgroundJobsTests.ProcessOutboxMessagesJob
 {
+    [Collection(nameof(ProbingTestsCollectionDefinition))]
     public partial class ProcessOutboxMessagesJobTests : IClassFixture<HdmServerApplicationFactory>
     {
         private int _batchSize => _factory.Services
