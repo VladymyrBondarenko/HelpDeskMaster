@@ -3,6 +3,7 @@ using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
+using HelpDeskMaster.Domain.Entities.WorkRequests;
 using HelpDeskMaster.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace HelpDeskMaster.Persistence.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<WorkRequest> WorkRequests { get; set; }
 
         public DbSet<WorkCategory> WorkCategories { get; set; }
 

@@ -1,5 +1,7 @@
 ﻿using HelpDeskMaster.Domain.Entities.Equipments;
 using HelpDeskMaster.Domain.Entities.EquipmentTypes;
+using HelpDeskMaster.Domain.Entities.WorkCategories;
+using HelpDeskMaster.Domain.Entities.WorkDirections;
 using HelpDeskMaster.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -130,6 +132,67 @@ namespace HelpDeskMaster.App.DataMocking
                 computerInfo,
                 laptopInfo
             ]);
+            #endregion
+
+            #region Mock work requests
+            var date = new DateTimeOffset(
+                2024, 4, 28,
+                12, 34, 5,
+                new TimeSpan());
+
+            var workDirections = new List<WorkDirection>
+            {
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Access & Authorization",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Information Security",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Service improvement",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Office housekeeping",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Cloud products",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Executor's software",
+                    date),
+                new WorkDirection(
+                    Guid.NewGuid(),
+                    "Executor's & coworking's equipment",
+                    date)
+            };
+            await _dbContext.WorkDirections.AddRangeAsync(workDirections);
+
+            var workCategories = new List<WorkCategory>
+            {
+                new WorkCategory(
+                    Guid.NewGuid(),
+                    "Improvement",
+                    date),
+                new WorkCategory(
+                    Guid.NewGuid(),
+                    "Incorrect work",
+                    date),
+                new WorkCategory(
+                    Guid.NewGuid(),
+                    "Slow performance",
+                    date),
+                new WorkCategory(
+                    Guid.NewGuid(),
+                    "Breakdown",
+                    date)
+            };
+            await _dbContext.WorkCategories.AddRangeAsync(workCategories);
             #endregion
 
             await _dbContext.SaveChangesAsync();

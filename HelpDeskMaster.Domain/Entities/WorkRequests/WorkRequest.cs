@@ -1,11 +1,17 @@
 ﻿using Ardalis.GuardClauses;
 using HelpDeskMaster.Domain.Abstractions;
+using HelpDeskMaster.Domain.Entities.WorkCategories;
+using HelpDeskMaster.Domain.Entities.WorkDirections;
 using HelpDeskMaster.Domain.Entities.WorkRequestStageChanges;
 
 namespace HelpDeskMaster.Domain.Entities.WorkRequests
 {
     public class WorkRequest : AggregateRoot
     {
+        private WorkRequest()
+        {
+        }
+
         private WorkRequest(Guid id, DateTimeOffset createdAt,
             Guid authorId,
             Guid directionId,
@@ -15,8 +21,8 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
             string? content) : base(id, createdAt)
         {
             AuthorId = Guard.Against.Default(authorId);
-            DirectionId = Guard.Against.Default(directionId);
-            CategoryId = Guard.Against.Default(categoryId);
+            WorkDirectionId = Guard.Against.Default(directionId);
+            WorkCategoryId = Guard.Against.Default(categoryId);
             FailureRevealedDate = Guard.Against.Default(failureRevealedDate);
             DesiredExecutionDate = Guard.Against.Default(desiredExecutionDate);
             Content = content;
@@ -28,9 +34,13 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
 
         public int RequestNumber { get; }
 
-        public Guid DirectionId { get; private set; }
+        public Guid WorkDirectionId { get; private set; }
 
-        public Guid CategoryId { get; private set; }
+        public WorkDirection? WorkDirection { get; private set; }
+
+        public Guid WorkCategoryId { get; private set; }
+
+        public WorkCategory? WorkCategory { get; private set; }
 
         public DateTimeOffset FailureRevealedDate { get; private set; }
 
@@ -38,17 +48,17 @@ namespace HelpDeskMaster.Domain.Entities.WorkRequests
 
         public string? Content { get; private set; }
 
-        private HashSet<WorkRequestPost> _posts = new();
+        private List<WorkRequestPost> _posts = new();
 
         public IReadOnlyList<WorkRequestStageChange> RequestStageChanges => _requestStageChanges.ToList();
 
-        private HashSet<WorkRequestStageChange> _requestStageChanges = new();
+        private List<WorkRequestStageChange> _requestStageChanges = new();
 
         public IReadOnlyList<WorkRequestPost> WorkRequestPosts => _posts.ToList();
 
         public IReadOnlyList<WorkRequestEquipment> Equipments => _equipments.ToList();
 
-        private HashSet<WorkRequestEquipment> _equipments = new();
+        private List<WorkRequestEquipment> _equipments = new();
 
         public static WorkRequest Create(Guid id, DateTimeOffset createdAt,
             Guid ownerId,

@@ -3,6 +3,7 @@ using HelpDeskMaster.Domain.Entities.EquipmentTypes;
 using HelpDeskMaster.Domain.Entities.Users;
 using HelpDeskMaster.Domain.Entities.WorkCategories;
 using HelpDeskMaster.Domain.Entities.WorkDirections;
+using HelpDeskMaster.Domain.Entities.WorkRequests;
 using HelpDeskMaster.Persistence.Data;
 using HelpDeskMaster.Persistence.Data.Repositories;
 using HelpDeskMaster.Persistence.Data.Repositories.Equipment;
@@ -29,7 +30,8 @@ namespace HelpDeskMaster.Persistence.DependencyInjection
                 .AddScoped<IEquipmentRepository, EquipmentRepository>()
                 .AddScoped<IEquipmentComputerInfoRepository, EquipmentComputerInfoRepository>()
                 .AddScoped<IComputerEquipmentRepository, ComputerEquipmentRepository>()
-                .AddScoped<IUserEquipmentRepository, UserEquipmentRepository>();
+                .AddScoped<IUserEquipmentRepository, UserEquipmentRepository>()
+                .AddScoped<IWorkRequestRepository, WorkRequestRepository>();
 
             services.AddSingleton<ConvertDomainEventsToOutboxMessageInterceptor>();
 

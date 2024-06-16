@@ -1,4 +1,5 @@
 ﻿using HelpDeskMaster.Domain.Entities.WorkDirections;
+using HelpDeskMaster.Domain.Entities.WorkRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,10 @@ namespace HelpDeskMaster.Persistence.Configurations
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(75);
+
+            builder.HasMany<WorkRequest>()
+                .WithOne(x => x.WorkDirection)
+                .HasForeignKey(x => x.WorkDirectionId);
         }
     }
 }
