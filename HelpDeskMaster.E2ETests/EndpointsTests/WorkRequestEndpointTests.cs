@@ -85,7 +85,7 @@ namespace HelpDeskMaster.E2ETests.EndpointsTests
 
             var reponseBody = await response.Content.ReadFromJsonAsync<ResponseBody<GetWorkRequestResponse>>();
 
-            // validate response body
+            // assert response body
             reponseBody.Should().NotBeNull()
                 .And.Subject.As<ResponseBody<GetWorkRequestResponse>>()
                 .Data.Should().NotBeNull();
